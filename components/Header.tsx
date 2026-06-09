@@ -5,9 +5,13 @@ export default function Header() {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4 bg-black border-b border-[#252525]">
-        <span className="font-display text-white text-2xl tracking-widest uppercase">
+        <Link
+          href="/"
+          aria-label="Accueil"
+          className="font-display text-white text-2xl tracking-widest uppercase transition-colors duration-200 hover:text-lime"
+        >
           N&apos;FEST
-        </span>
+        </Link>
         <div className="flex items-center gap-4">
           <Link
             href="/recherche"
