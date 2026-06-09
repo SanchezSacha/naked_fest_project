@@ -13,10 +13,373 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  password String
-  name String?
+  id              Int       @id @default(autoincrement())
+  email           String    @unique
+  password        String
+  name            String?
+  role            UserRole  @default(USER)
+  emailVerifiedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  sessions                Session[]
+  emailVerificationTokens EmailVerificationToken[]
+  passwordResetTokens     PasswordResetToken[]
+  pushSubscriptions       PushSubscription[]
+  eventReminders          EventReminder[]
 }
 
+// Comptes et securite
 
+model Session {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model EmailVerificationToken {
+  id        Int       @id @default(autoincrement())
+  token     String    @unique
+  userId    Int
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model PasswordResetToken {
+  id        Int       @id @default(autoincrement())
+  token     String    @unique
+  userId    Int
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// Festival
+
+model Event {
+  id          Int         @id @default(autoincrement())
+  title       String
+  slug        String      @unique
+  description String
+  type        EventType
+  status      EventStatus @default(DRAFT)
+  startsAt    DateTime
+  endsAt      DateTime?
+  imageUrl    String?
+  capacity    Int?
+  isFeatured  Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  categoryId Int?
+  genreId    Int?
+  locationId Int?
+
+  category EventCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  genre    MusicGenre?    @relation(fields: [genreId], references: [id], onDelete: SetNull)
+  location Location?      @relation(fields: [locationId], references: [id], onDelete: SetNull)
+
+  artists     EventArtist[]
+  sponsors    EventSponsor[]
+  mapPoints   MapPoint[]
+  reminders   EventReminder[]
+  standEvents StandEvent[]
+
+  @@index([startsAt])
+  @@index([type])
+  @@index([status])
+  @@index([categoryId])
+  @@index([genreId])
+  @@index([locationId])
+}
+
+model EventCategory {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  events Event[]
+}
+
+model MusicGenre {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  events Event[]
+}
+
+model Artist {
+  id        Int        @id @default(autoincrement())
+  name      String
+  slug      String     @unique
+  type      ArtistType @default(ARTIST)
+  bio       String?
+  imageUrl  String?
+  website   String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  events EventArtist[]
+
+  @@index([type])
+}
+
+model EventArtist {
+  eventId  Int
+  artistId Int
+  role     String?
+  order    Int     @default(0)
+
+  event  Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, artistId])
+  @@index([artistId])
+}
+
+model Location {
+  id          Int          @id @default(autoincrement())
+  name        String
+  slug        String       @unique
+  type        LocationType
+  description String?
+  address     String?
+  latitude    Float?
+  longitude   Float?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  events    Event[]
+  stands    Stand[]
+  mapPoints MapPoint[]
+
+  @@index([type])
+}
+
+model Stand {
+  id          Int         @id @default(autoincrement())
+  name        String
+  slug        String      @unique
+  description String?
+  type        StandType   @default(OTHER)
+  status      StandStatus @default(ACTIVE)
+  imageUrl    String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  locationId Int?
+  sponsorId  Int?
+
+  location Location? @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  sponsor  Sponsor?  @relation(fields: [sponsorId], references: [id], onDelete: SetNull)
+
+  events StandEvent[]
+
+  @@index([type])
+  @@index([status])
+  @@index([locationId])
+  @@index([sponsorId])
+}
+
+model StandEvent {
+  standId Int
+  eventId Int
+
+  stand Stand @relation(fields: [standId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@id([standId, eventId])
+  @@index([eventId])
+}
+
+model Sponsor {
+  id          Int         @id @default(autoincrement())
+  name        String
+  slug        String      @unique
+  tier        SponsorTier @default(PARTNER)
+  logoUrl     String?
+  website     String?
+  description String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  events EventSponsor[]
+  stands Stand[]
+
+  @@index([tier])
+}
+
+model EventSponsor {
+  eventId   Int
+  sponsorId Int
+
+  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  sponsor Sponsor @relation(fields: [sponsorId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, sponsorId])
+  @@index([sponsorId])
+}
+
+model MapPoint {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  type        MapPointType
+  latitude    Float
+  longitude   Float
+  icon        String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  eventId    Int?
+  locationId Int?
+
+  event    Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  location Location? @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@index([type])
+  @@index([eventId])
+  @@index([locationId])
+}
+
+// Notifications
+
+model PushSubscription {
+  id        Int      @id @default(autoincrement())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId Int?
+
+  user      User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reminders EventReminder[]
+
+  @@index([userId])
+}
+
+model EventReminder {
+  id        Int           @id @default(autoincrement())
+  delay     ReminderDelay
+  remindAt  DateTime
+  sentAt    DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  eventId            Int
+  userId             Int?
+  pushSubscriptionId Int?
+
+  event            Event             @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user             User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pushSubscription PushSubscription? @relation(fields: [pushSubscriptionId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+  @@index([userId])
+  @@index([pushSubscriptionId])
+  @@index([remindAt])
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum EventType {
+  CONCERT
+  CONFERENCE
+  ACTIVITY
+  STAND
+  OTHER
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  ARCHIVED
+}
+
+enum ArtistType {
+  ARTIST
+  SPEAKER
+  HOST
+}
+
+enum LocationType {
+  STAGE
+  STAND
+  ENTRANCE
+  RESTROOM
+  FOOD
+  INFO
+  FIRST_AID
+  OTHER
+}
+
+enum StandType {
+  FOOD
+  DRINK
+  MERCH
+  INFO
+  SPONSOR
+  OTHER
+}
+
+enum StandStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum SponsorTier {
+  MAIN
+  GOLD
+  SILVER
+  BRONZE
+  PARTNER
+}
+
+enum MapPointType {
+  STAGE
+  STAND
+  FOOD
+  RESTROOM
+  ENTRANCE
+  INFO
+  FIRST_AID
+  EVENT
+  OTHER
+}
+
+enum ReminderDelay {
+  HOURS_24
+  HOURS_2
+  MINUTES_30
+}
