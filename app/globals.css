@@ -1,26 +1,78 @@
 @import "tailwindcss";
 
+/* ── Tailwind design tokens (noms non-conflictuels uniquement) ── */
+@theme {
+  --color-dark: #09090b;
+  --color-dark-card: #111113;
+  --color-dark-border: #252525;
+  --font-sans: var(--font-space-grotesk);
+  --font-condensed: var(--font-barlow-condensed);
+  --font-display: var(--font-bebas-neue);
+}
+
+/* ── Neon palette (CSS vars, définis hors @theme pour éviter le conflit
+       avec les scales built-in de Tailwind v4 lime/pink/cyan/violet) ── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --neon-lime: #c8ff00;
+  --neon-pink: #ff2d9b;
+  --neon-cyan: #00f5ff;
+  --neon-violet: #bf5fff;
+  --neon-orange: #ff6b00;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ── Utilities explicites — garanties d'être générées ── */
+@layer utilities {
+  .text-lime   { color: var(--neon-lime); }
+  .text-pink   { color: var(--neon-pink); }
+  .text-cyan   { color: var(--neon-cyan); }
+  .text-violet { color: var(--neon-violet); }
+  .text-orange { color: var(--neon-orange); }
+  .text-dark   { color: var(--color-dark); }
+
+  .bg-lime     { background-color: var(--neon-lime); }
+  .bg-pink     { background-color: var(--neon-pink); }
+  .bg-cyan     { background-color: var(--neon-cyan); }
+  .bg-violet   { background-color: var(--neon-violet); }
+  .bg-dark     { background-color: var(--color-dark); }
+
+  .border-lime   { border-color: var(--neon-lime); }
+  .border-pink   { border-color: var(--neon-pink); }
+  .border-cyan   { border-color: var(--neon-cyan); }
+  .border-violet { border-color: var(--neon-violet); }
+  .border-dark-border { border-color: var(--color-dark-border); }
+
+  .divide-lime > * + *   { border-color: var(--neon-lime); }
+  .divide-pink > * + *   { border-color: var(--neon-pink); }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base styles ───────────────────────────────────────────────── */
+/* NB: pas de reset * { padding/margin: 0 } ici — le preflight de
+   Tailwind le gère déjà dans @layer base. Le répéter hors-layer
+   écraserait tous les utilitaires px-* / py-* de Tailwind. */
+html {
+  background-color: #09090b;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #09090b;
+  color: #ffffff;
+  font-family: var(--font-space-grotesk), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-display {
+  font-family: var(--font-bebas-neue), Impact, sans-serif;
+}
+
+.font-condensed {
+  font-family: var(--font-barlow-condensed), Arial Narrow, sans-serif;
+}
+
+/* ── PWA safe area ─────────────────────────────────────────────── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+  }
 }
