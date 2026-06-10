@@ -50,7 +50,9 @@ const mapControls = [
 const nearbyPlaces = [
   { name: "Zone Cryo", kind: "Ambient / Noise", color: "bg-cyan" },
   { name: "Bar Thermique", kind: "Ravitaillement", color: "bg-lime" },
-  { name: "Sanctuaire", kind: "Repos chauffé", color: "bg-violet" },
+  { name: "Sanctuaire de Glace", kind: "Repos chauffé", color: "bg-violet" },
+  { name: "Station Ski", kind: "Accès pistes", color: "bg-orange" },
+  { name: "Igloo VIP", kind: "Expérience exclusive", color: "bg-pink" },
 ];
 
 export default function CartePage() {

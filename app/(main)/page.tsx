@@ -244,7 +244,7 @@ export default function HomePage() {
             </p>
             <p className="text-white/55 text-sm leading-relaxed max-w-sm">
               Un domaine de 50 hectares dans les Ardennes transformé en zone de
-              liberté radicale. 5 scènes, 3 zones thermiques, 1 sanctuaire de glace.
+              liberté radicale. 5 scènes, 2 bars thermiques, 1 sanctuaire de glace, 1 station ski, 1 igloo VIP.
             </p>
 
             {/* CTA — outline → solid on hover */}
