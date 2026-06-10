@@ -132,7 +132,7 @@ export default function CartePage() {
             </div>
           </div>
 
-          <div className="absolute bottom-8 left-8 hidden w-[320px] border border-white/15 bg-black/55 p-5 backdrop-blur lg:block">
+          <div className="absolute bottom-20 left-8 hidden w-[320px] border border-white/15 bg-black/55 p-5 backdrop-blur lg:block">
             <p className="font-condensed text-[10px] font-semibold uppercase tracking-[0.28em] text-white/45">
               À proximité
             </p>
