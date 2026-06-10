@@ -123,6 +123,7 @@ export default function CartePage() {
             ))}
           </div>
 
+          {/* Marqueurs sur la carte */}
           <div className="absolute left-1/2 top-[63%] -translate-x-1/2 -translate-y-1/2 lg:left-[54%] lg:top-[58%]">
             <div className="relative flex flex-col items-center">
               <span className="relative grid size-6 rotate-45 place-items-center bg-pink shadow-[0_0_22px_rgba(255,45,155,0.75)] lg:size-8">
@@ -130,6 +131,66 @@ export default function CartePage() {
               </span>
               <span className="mt-6 bg-pink px-2.5 py-1 font-condensed text-[10px] font-bold uppercase leading-none tracking-[0.06em] text-white shadow-[0_6px_16px_rgba(0,0,0,0.45)] lg:text-xs">
                 Scène principale
+              </span>
+            </div>
+          </div>
+
+          {/* Zone Cryo - haut gauche */}
+          <div className="absolute left-[20%] top-[25%] -translate-x-1/2 -translate-y-1/2 lg:left-[22%] lg:top-[28%]">
+            <div className="relative flex flex-col items-center">
+              <span className="relative grid size-6 rotate-45 place-items-center bg-cyan shadow-[0_0_22px_rgba(0,245,255,0.75)] lg:size-7">
+                <span className="size-2 bg-white/90" />
+              </span>
+              <span className="mt-5 bg-cyan px-2 py-1 font-condensed text-[10px] font-bold uppercase leading-none tracking-[0.06em] text-dark shadow-[0_6px_16px_rgba(0,0,0,0.45)] lg:text-xs">
+                Zone Cryo
+              </span>
+            </div>
+          </div>
+
+          {/* Bar Thermique - centre droit */}
+          <div className="absolute left-[75%] top-[45%] -translate-x-1/2 -translate-y-1/2 lg:left-[72%] lg:top-[42%]">
+            <div className="relative flex flex-col items-center">
+              <span className="relative grid size-6 rotate-45 place-items-center bg-lime shadow-[0_0_22px_rgba(200,255,0,0.75)] lg:size-7">
+                <span className="size-2 bg-dark/90" />
+              </span>
+              <span className="mt-5 bg-lime px-2 py-1 font-condensed text-[10px] font-bold uppercase leading-none tracking-[0.06em] text-dark shadow-[0_6px_16px_rgba(0,0,0,0.45)] lg:text-xs">
+                Bar Thermique
+              </span>
+            </div>
+          </div>
+
+          {/* Sanctuaire de Glace - bas gauche */}
+          <div className="absolute left-[25%] top-[75%] -translate-x-1/2 -translate-y-1/2 lg:left-[28%] lg:top-[72%]">
+            <div className="relative flex flex-col items-center">
+              <span className="relative grid size-6 rotate-45 place-items-center bg-violet shadow-[0_0_22px_rgba(191,95,255,0.75)] lg:size-7">
+                <span className="size-2 bg-white/90" />
+              </span>
+              <span className="mt-5 bg-violet px-2 py-1 font-condensed text-[10px] font-bold uppercase leading-none tracking-[0.06em] text-white shadow-[0_6px_16px_rgba(0,0,0,0.45)] lg:text-xs">
+                Sanctuaire
+              </span>
+            </div>
+          </div>
+
+          {/* Station Ski - haut droit */}
+          <div className="absolute left-[78%] top-[22%] -translate-x-1/2 -translate-y-1/2 lg:left-[80%] lg:top-[25%]">
+            <div className="relative flex flex-col items-center">
+              <span className="relative grid size-6 rotate-45 place-items-center bg-orange shadow-[0_0_22px_rgba(255,107,0,0.75)] lg:size-7">
+                <span className="size-2 bg-white/90" />
+              </span>
+              <span className="mt-5 bg-orange px-2 py-1 font-condensed text-[10px] font-bold uppercase leading-none tracking-[0.06em] text-white shadow-[0_6px_16px_rgba(0,0,0,0.45)] lg:text-xs">
+                Station Ski
+              </span>
+            </div>
+          </div>
+
+          {/* Igloo VIP - bas droit */}
+          <div className="absolute left-[70%] top-[78%] -translate-x-1/2 -translate-y-1/2 lg:left-[68%] lg:top-[75%]">
+            <div className="relative flex flex-col items-center">
+              <span className="relative grid size-6 rotate-45 place-items-center bg-pink shadow-[0_0_22px_rgba(255,45,155,0.75)] lg:size-7">
+                <span className="size-2 bg-white/90" />
+              </span>
+              <span className="mt-5 bg-pink px-2 py-1 font-condensed text-[10px] font-bold uppercase leading-none tracking-[0.06em] text-white shadow-[0_6px_16px_rgba(0,0,0,0.45)] lg:text-xs">
+                Igloo VIP
               </span>
             </div>
           </div>
