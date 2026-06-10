@@ -1,108 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-/* ─── DATA ─────────────────────────────────────────────────────── */
-
-type EventData = {
-  id: string;
-  artist: string;
-  category: string;
-  genre: string;
-  origin: string;
-  date: string;
-  time: string;
-  duration: string;
-  stage: string;
-  image: string;
-  accentColor: string;
-  accentClass: string;
-  accentBgClass: string;
-  accentBorderClass: string;
-  accentTextClass: string;
-  // Triple-layer offsets for artist name (pink layer, lime layer)
-  layerA: string; // top-left color class
-  layerB: string; // bottom-right color class
-  description: string;
-  temperature: string;
-  db: string;
-  rating: number;
-};
-
-const events: Record<string, EventData> = {
-  frontex: {
-    id: "frontex",
-    artist: "Frontex",
-    category: "Concert",
-    genre: "Techno Industrielle",
-    origin: "DE",
-    date: "SAM 25",
-    time: "23:00",
-    duration: "2H",
-    stage: "Scène Glacier",
-    image: "/event_1.png",
-    accentColor: "#c8ff00",
-    accentClass: "text-lime",
-    accentBgClass: "bg-lime",
-    accentBorderClass: "border-lime",
-    accentTextClass: "text-dark",
-    layerA: "text-pink",
-    layerB: "text-cyan",
-    description:
-      "Frontex transforme l'acier et la glace en arme sonique. Beats industriels forgés dans la nuit arctique, rythmiques martelées au-delà du seuil humain. Une performance qui efface toute notion de confort et repousse les frontières du corps jusqu'à l'extase mécanique.",
-    temperature: "-8°C",
-    db: "115 DB",
-    rating: 5,
-  },
-  "king-vibe": {
-    id: "king-vibe",
-    artist: "King Vibe",
-    category: "Concert",
-    genre: "Experimental Noise",
-    origin: "NO",
-    date: "DIM 26",
-    time: "02:00",
-    duration: "1H30",
-    stage: "Sanctuaire de Glace",
-    image: "/Event_2.png",
-    accentColor: "#ff2d9b",
-    accentClass: "text-pink",
-    accentBgClass: "bg-pink",
-    accentBorderClass: "border-pink",
-    accentTextClass: "text-white",
-    layerA: "text-cyan",
-    layerB: "text-lime",
-    description:
-      "King Vibe orchestre le chaos. Noise expérimental surgi des fjords norvégiens, couches de fréquences brutes qui déchirent le silence des Ardennes en mille fragments lumineux. Aucune mélodie. Aucune pitié. Juste la vibration pure qui réorganise le monde depuis l'intérieur.",
-    temperature: "-6°C",
-    db: "118 DB",
-    rating: 4,
-  },
-  "2nd-gen": {
-    id: "2nd-gen",
-    artist: "2nd-Gen",
-    category: "Concert",
-    genre: "Glitch Ambient",
-    origin: "FR",
-    date: "VEN 24",
-    time: "22:00",
-    duration: "1H45",
-    stage: "Sanctuaire de Glace",
-    image: "/event_3.png",
-    accentColor: "#00f5ff",
-    accentClass: "text-cyan",
-    accentBgClass: "bg-cyan",
-    accentBorderClass: "border-cyan",
-    accentTextClass: "text-dark",
-    layerA: "text-pink",
-    layerB: "text-lime",
-    description:
-      "2nd-Gen ouvre le festival avec une plongée dans le glitch ambiant. Textures numériques fracturées, drones hypnotiques nés de l'ère du bug et de la dérive algorithmique. Le point zéro d'une nuit qui ne ressemble à aucune autre — l'ouverture rituelle du froid radical.",
-    temperature: "-4°C",
-    db: "108 DB",
-    rating: 4,
-  },
-};
+import { events } from "@/lib/events";
+import BellButton from "@/components/BellButton";
 
 /* ─── FEATURES (fixed icons for all events) ──────────────────────── */
 
@@ -154,16 +54,20 @@ export default async function EventDetailPage({
       <section className="border-b border-[#252525]">
         <div className="px-8 pt-14 pb-10 md:px-12 md:pt-16">
 
-          {/* Back link */}
-          <Link
-            href="/programme"
-            className="inline-flex items-center gap-2 font-condensed text-[11px] tracking-[0.2em] uppercase text-white/40 hover:text-white transition-colors duration-200 mb-10"
-          >
-            <svg width="20" height="20" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <path d="M12 7H2M2 7L6.5 2.5M2 7L6.5 11.5"
-                stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
+          {/* Back link + Bell */}
+          <div className="flex items-center justify-between mb-10">
+            <Link
+              href="/programme"
+              className="inline-flex items-center gap-2 font-condensed text-[11px] tracking-[0.2em] uppercase text-white/40 hover:text-white transition-colors duration-200"
+            >
+              <svg width="20" height="20" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M12 7H2M2 7L6.5 2.5M2 7L6.5 11.5"
+                  stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
+
+            <BellButton eventId={event.id} accentClass={event.accentClass} />
+          </div>
 
           {/* Category + date */}
           <div className="flex items-center gap-3 mb-6">
@@ -289,8 +193,6 @@ export default async function EventDetailPage({
           </div>
         </div>
       </section>
-
-      
 
       {/* ── TECHNICAL STATS ─────────────────────────────────────────── */}
       <section className=" my-10  border-2 border-[#3a3a3a]" style={{ backgroundColor: "#201F22" }}>
