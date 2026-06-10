@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-type Platform = "android" | "ios" | "desktop";
+type Platform = "android" | "ios" | "macos" | "desktop";
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -15,12 +15,20 @@ const DISMISS_KEY = "nfest-pwa-install-dismissed";
 function detectPlatform(): Platform {
   if (typeof navigator === "undefined") return "desktop";
   const ua = navigator.userAgent.toLowerCase();
+  const platform = navigator.platform;
+  
   const isIOS =
     /iphone|ipad|ipod/.test(ua) ||
     // iPadOS 13+ se présente comme un Mac avec écran tactile
-    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    (platform === "MacIntel" && navigator.maxTouchPoints > 1);
   if (isIOS) return "ios";
+  
   if (/android/.test(ua)) return "android";
+  
+  // macOS (vrai Mac, pas iPad) - Safari n'a pas de beforeinstallprompt
+  const isMac = platform === "MacIntel" || platform === "MacAppleSilicon" || /macintosh/.test(ua);
+  if (isMac) return "macos";
+  
   return "desktop";
 }
 
@@ -103,7 +111,7 @@ export default function PWAInstallPrompt() {
 
   if (!visible) return null;
 
-  const isDesktop = platform === "desktop";
+  const isDesktop = platform === "desktop" || platform === "macos";
 
   return (
     <>
@@ -171,6 +179,8 @@ export default function PWAInstallPrompt() {
           <div className="mt-5">
             {platform === "ios" ? (
               <IosTutorial />
+            ) : platform === "macos" ? (
+              <MacTutorial />
             ) : (
               <button
                 onClick={handleAndroidInstall}
@@ -254,6 +264,74 @@ function IosTutorial() {
           </li>
         ))}
       </ol>
+    </div>
+  );
+}
+
+function MacTutorial() {
+  const steps = [
+    {
+      label: (
+        <>
+          Clique sur <strong className="text-white">Partager</strong> dans Safari
+        </>
+      ),
+      icon: (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--neon-cyan)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 3v13" />
+          <polyline points="8 7 12 3 16 7" />
+          <path d="M4 13v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6" />
+        </svg>
+      ),
+    },
+    {
+      label: (
+        <>
+          Choisis <strong className="text-white">Ajouter au Dock</strong>
+        </>
+      ),
+      icon: (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--neon-cyan)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="3" />
+          <line x1="12" y1="8" x2="12" y2="16" />
+          <line x1="8" y1="12" x2="16" y2="12" />
+        </svg>
+      ),
+    },
+    {
+      label: (
+        <>
+          L&apos;app s&apos;ouvre comme une fenêtre native
+        </>
+      ),
+      icon: (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--neon-cyan)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <path d="M9 3v18" />
+        </svg>
+      ),
+    },
+  ];
+
+  return (
+    <div className="rounded-xl border border-dark-border bg-black/40 p-4">
+      <p className="mb-3 font-condensed text-sm font-semibold uppercase tracking-widest text-cyan">
+        Installation sur Mac (Safari)
+      </p>
+      <ol className="space-y-3">
+        {steps.map((step, i) => (
+          <li key={i} className="flex items-center gap-3">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5 font-condensed text-sm font-bold text-white/80">
+              {i + 1}
+            </span>
+            <span className="text-sm text-white/80">{step.label}</span>
+            <span className="ml-auto shrink-0">{step.icon}</span>
+          </li>
+        ))}
+      </ol>
+      <p className="mt-3 text-xs text-white/40">
+        Chrome/Edge : utilise le bouton ci-dessus si disponible.
+      </p>
     </div>
   );
 }
