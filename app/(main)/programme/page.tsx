@@ -2,9 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ProgrammeUserBar from "@/components/ProgrammeUserBar";
-import { useState, useMemo } from "react";
 import ProgramFilters from "@/components/ProgramFilters";
 
 /* ─── DATA ─────────────────────────────────────────────────────── */
@@ -12,6 +11,7 @@ import ProgramFilters from "@/components/ProgramFilters";
 type DayId = "VEN" | "SAM" | "DIM";
 
 type Slot = {
+  day?: DayId;
   image: string;
   artist: string;
   genre: string;
@@ -120,6 +120,8 @@ const accentByDay: Record<DayId, string> = {
 
 export default function ProgrammePage() {
   const [activeDay, setActiveDay] = useState<DayId>("SAM");
+  const [eventsByDay, setEventsByDay] = useState<Record<DayId, Slot[]>>(lineup);
+  const [dataSource, setDataSource] = useState<"demo" | "strapi">("demo");
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     dates: [],
@@ -127,9 +129,36 @@ export default function ProgrammePage() {
     genres: [],
   });
 
+  useEffect(() => {
+    fetch("/api/strapi/events")
+      .then((res) => res.json())
+      .then((payload: { events?: Slot[]; source?: string }) => {
+        if (!payload.events?.length) {
+          return;
+        }
+
+        const nextEvents: Record<DayId, Slot[]> = {
+          VEN: [],
+          SAM: [],
+          DIM: [],
+        };
+
+        payload.events.forEach((event) => {
+          const day = event.day ?? "SAM";
+          nextEvents[day].push(event);
+        });
+
+        setEventsByDay(nextEvents);
+        setDataSource(payload.source === "strapi" ? "strapi" : "demo");
+      })
+      .catch(() => {
+        setDataSource("demo");
+      });
+  }, []);
+
   // Filtrer les slots en fonction des filtres actifs
   const filteredSlots = useMemo(() => {
-    let slots = lineup[activeDay];
+    let slots = eventsByDay[activeDay];
 
     // Filtrer par catégories
     if (filters.categories.length > 0) {
@@ -146,12 +175,12 @@ export default function ProgrammePage() {
     }
 
     // Trier par heure
-    return slots.sort((a, b) => {
+    return [...slots].sort((a, b) => {
       const timeA = parseInt(a.time.replace(':', ''));
       const timeB = parseInt(b.time.replace(':', ''));
       return timeA - timeB;
     });
-  }, [activeDay, filters]);
+  }, [activeDay, eventsByDay, filters]);
 
   const handleApplyFilters = (newFilters: FilterState) => {
     setFilters(newFilters);
@@ -249,9 +278,14 @@ export default function ProgrammePage() {
             )}
           </div>
           
-          <span className="font-condensed text-[11px] text-white/40 tracking-[0.2em] uppercase">
-            {filteredSlots.length} {filteredSlots.length === 1 ? "résultat" : "résultats"}
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="hidden border border-white/10 px-2 py-1 font-condensed text-[9px] uppercase tracking-[0.18em] text-white/35 sm:inline">
+              {dataSource === "strapi" ? "Strapi" : "Demo"}
+            </span>
+            <span className="font-condensed text-[11px] text-white/40 tracking-[0.2em] uppercase">
+              {filteredSlots.length} {filteredSlots.length === 1 ? "résultat" : "résultats"}
+            </span>
+          </div>
         </div>
       </section>
 
