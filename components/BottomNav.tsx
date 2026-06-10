@@ -16,18 +16,7 @@ const navItems = [
       </svg>
     ),
   },
-  {
-    href: "/artistes",
-    label: "Artiste",
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="9" cy="7" r="4" />
-        <path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
-        <path d="M16 11c1.66 0 3 1.34 3 3v7" />
-        <path d="M19 11a3 3 0 0 1 0 6" />
-      </svg>
-    ),
-  },
+  
   {
     href: "/carte",
     label: "Carte",
@@ -40,13 +29,12 @@ const navItems = [
     ),
   },
   {
-    href: "/infos",
-    label: "Infos",
+    href: "/compte",
+    label: "Compte",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <line x1="12" y1="8" x2="12" y2="12" />
-        <line x1="12" y1="16" x2="12.01" y2="16" />
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
       </svg>
     ),
   },

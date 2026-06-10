@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ProgrammeUserBar from "@/components/ProgrammeUserBar";
 import ProgramFilters from "@/components/ProgramFilters";
 
@@ -11,6 +11,7 @@ import ProgramFilters from "@/components/ProgramFilters";
 type DayId = "VEN" | "SAM" | "DIM";
 
 type Slot = {
+  day?: DayId;
   image: string;
   artist: string;
   genre: string;
@@ -23,6 +24,7 @@ type Slot = {
   hoverBorder: string;
   category: string;
   genreId: string;
+  eventId?: string; // detail page ID, if available
 };
 
 type FilterState = {
@@ -44,7 +46,7 @@ const lineup: Record<DayId, Slot[]> = {
       stage: "Sanctuaire de Glace", time: "22:00",
       dateBg: "bg-cyan", dateText: "text-dark", accent: "text-cyan",
       hoverBorder: "group-hover:[border-top-color:#00f5ff]",
-      category: "concerts", genreId: "dark-ambient",
+      category: "concerts", genreId: "dark-ambient", eventId: "2nd-gen",
     },
     {
       image: "/event_1.png", artist: "Névé", genre: "Techno Hypnotique", origin: "BE",
@@ -67,7 +69,7 @@ const lineup: Record<DayId, Slot[]> = {
       stage: "Scène Glacier", time: "23:00",
       dateBg: "bg-lime", dateText: "text-dark", accent: "text-lime",
       hoverBorder: "group-hover:[border-top-color:#c8ff00]",
-      category: "concerts", genreId: "industrial",
+      category: "concerts", genreId: "industrial", eventId: "frontex",
     },
     {
       image: "/event_3.png", artist: "Permafrost", genre: "EBM / Power", origin: "SE",
@@ -90,7 +92,7 @@ const lineup: Record<DayId, Slot[]> = {
       stage: "Sanctuaire de Glace", time: "02:00",
       dateBg: "bg-pink", dateText: "text-white", accent: "text-pink",
       hoverBorder: "group-hover:[border-top-color:#ff2d9b]",
-      category: "concerts", genreId: "dark-ambient",
+      category: "concerts", genreId: "dark-ambient", eventId: "king-vibe",
     },
     {
       image: "/event_1.png", artist: "Aurora", genre: "Ambient Cosmique", origin: "NO",
@@ -119,6 +121,8 @@ const accentByDay: Record<DayId, string> = {
 
 export default function ProgrammePage() {
   const [activeDay, setActiveDay] = useState<DayId>("SAM");
+  const [eventsByDay, setEventsByDay] = useState<Record<DayId, Slot[]>>(lineup);
+  const [dataSource, setDataSource] = useState<"demo" | "strapi">("demo");
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     dates: [],
@@ -126,9 +130,36 @@ export default function ProgrammePage() {
     genres: [],
   });
 
+  useEffect(() => {
+    fetch("/api/strapi/events")
+      .then((res) => res.json())
+      .then((payload: { events?: Slot[]; source?: string }) => {
+        if (!payload.events?.length) {
+          return;
+        }
+
+        const nextEvents: Record<DayId, Slot[]> = {
+          VEN: [],
+          SAM: [],
+          DIM: [],
+        };
+
+        payload.events.forEach((event) => {
+          const day = event.day ?? "SAM";
+          nextEvents[day].push(event);
+        });
+
+        setEventsByDay(nextEvents);
+        setDataSource(payload.source === "strapi" ? "strapi" : "demo");
+      })
+      .catch(() => {
+        setDataSource("demo");
+      });
+  }, []);
+
   // Filtrer les slots en fonction des filtres actifs
   const filteredSlots = useMemo(() => {
-    let slots = lineup[activeDay];
+    let slots = eventsByDay[activeDay];
 
     // Filtrer par catégories
     if (filters.categories.length > 0) {
@@ -145,12 +176,12 @@ export default function ProgrammePage() {
     }
 
     // Trier par heure
-    return slots.sort((a, b) => {
+    return [...slots].sort((a, b) => {
       const timeA = parseInt(a.time.replace(':', ''));
       const timeB = parseInt(b.time.replace(':', ''));
       return timeA - timeB;
     });
-  }, [activeDay, filters]);
+  }, [activeDay, eventsByDay, filters]);
 
   const handleApplyFilters = (newFilters: FilterState) => {
     setFilters(newFilters);
@@ -248,9 +279,14 @@ export default function ProgrammePage() {
             )}
           </div>
           
-          <span className="font-condensed text-[11px] text-white/40 tracking-[0.2em] uppercase">
-            {filteredSlots.length} {filteredSlots.length === 1 ? "résultat" : "résultats"}
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="hidden border border-white/10 px-2 py-1 font-condensed text-[9px] uppercase tracking-[0.18em] text-white/35 sm:inline">
+              {dataSource === "strapi" ? "Strapi" : "Demo"}
+            </span>
+            <span className="font-condensed text-[11px] text-white/40 tracking-[0.2em] uppercase">
+              {filteredSlots.length} {filteredSlots.length === 1 ? "résultat" : "résultats"}
+            </span>
+          </div>
         </div>
       </section>
 
@@ -268,13 +304,9 @@ export default function ProgrammePage() {
         {/* ── CARDS ───────────────────────────────────────────────── */}
         {filteredSlots.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-[#252525]">
-            {filteredSlots.map((e, index) => (
-              <div
-                key={`${e.artist}-${e.time}`}
-                className={`relative overflow-hidden group border-t-2 lg:border-t-0 border-l-2 border-transparent transition-all duration-300 ${e.hoverBorder} ${
-                  index === 0 ? 'lg:border-l-0' : ''
-                }`}
-              >
+            {filteredSlots.map((e, index) => {
+              const cardClass = `relative overflow-hidden group border-t-2 lg:border-t-0 border-l-2 border-transparent transition-all duration-300 ${e.hoverBorder} ${index === 0 ? 'lg:border-l-0' : ''}`;
+              const inner = (
                 <div className="relative aspect-[4/3] lg:aspect-[3/4] w-full h-[280px] lg:h-[400px]">
                   <Image
                     src={e.image}
@@ -320,8 +352,22 @@ export default function ProgrammePage() {
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+
+              return e.eventId ? (
+                <Link
+                  key={`${e.artist}-${e.time}`}
+                  href={`/programme/${e.eventId}`}
+                  className={cardClass}
+                >
+                  {inner}
+                </Link>
+              ) : (
+                <div key={`${e.artist}-${e.time}`} className={cardClass}>
+                  {inner}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className="px-8 py-20 text-center">
