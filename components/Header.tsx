@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import HeaderAuthActions from "@/components/HeaderAuthActions";
 
 export default function Header() {
   return (
@@ -20,12 +21,7 @@ export default function Header() {
           >
             <Image src="/Icon_search.svg" alt="Rechercher" width={18} height={18} />
           </Link>
-          <Link
-            href="/billetterie"
-            className="border border-lime bg-lime text-dark font-condensed font-bold text-[10px] px-6 py-3 tracking-[0.25em] uppercase transition-all duration-300 hover:bg-transparent hover:text-lime"
-          >
-            Billetterie
-          </Link>
+          <HeaderAuthActions />
         </div>
       </header>
       

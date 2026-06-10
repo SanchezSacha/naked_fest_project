@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import ProgrammeUserBar from "@/components/ProgrammeUserBar";
 import { useState, useMemo } from "react";
 import ProgramFilters from "@/components/ProgramFilters";
 
@@ -178,6 +180,8 @@ export default function ProgrammePage() {
         </div>
       </section>
 
+      <ProgrammeUserBar />
+
       {/* ── DAY TABS ──────────────────────────────────────────────── */}
       <section className="border-b border-[#252525] sticky top-14 z-40 bg-dark/95 backdrop-blur">
         <div className="grid grid-cols-3 divide-x divide-[#252525]">
@@ -347,7 +351,7 @@ export default function ProgrammePage() {
           </p>
           <Link
             href="/billetterie"
-            className="mt-10 border-2 border-lime bg-lime text-dark font-condensed font-bold text-sm px-14 py-5 tracking-[0.35em] uppercase transition-all duration-300 hover:bg-transparent hover:text-lime"
+            className="mt-10 border-2 border-lime bg-lime text-dark font-condensed font-bold text-sm px-14 py-5 tracking-[0.35em] uppercase transition-all duration-300 hover:bg-[#111113] hover:[color:var(--neon-lime)]"
           >
             Billetterie
           </Link>
