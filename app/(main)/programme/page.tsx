@@ -24,6 +24,7 @@ type Slot = {
   hoverBorder: string;
   category: string;
   genreId: string;
+  eventId?: string; // detail page ID, if available
 };
 
 type FilterState = {
@@ -45,7 +46,7 @@ const lineup: Record<DayId, Slot[]> = {
       stage: "Sanctuaire de Glace", time: "22:00",
       dateBg: "bg-cyan", dateText: "text-dark", accent: "text-cyan",
       hoverBorder: "group-hover:[border-top-color:#00f5ff]",
-      category: "concerts", genreId: "dark-ambient",
+      category: "concerts", genreId: "dark-ambient", eventId: "2nd-gen",
     },
     {
       image: "/event_1.png", artist: "Névé", genre: "Techno Hypnotique", origin: "BE",
@@ -68,7 +69,7 @@ const lineup: Record<DayId, Slot[]> = {
       stage: "Scène Glacier", time: "23:00",
       dateBg: "bg-lime", dateText: "text-dark", accent: "text-lime",
       hoverBorder: "group-hover:[border-top-color:#c8ff00]",
-      category: "concerts", genreId: "industrial",
+      category: "concerts", genreId: "industrial", eventId: "frontex",
     },
     {
       image: "/event_3.png", artist: "Permafrost", genre: "EBM / Power", origin: "SE",
@@ -91,7 +92,7 @@ const lineup: Record<DayId, Slot[]> = {
       stage: "Sanctuaire de Glace", time: "02:00",
       dateBg: "bg-pink", dateText: "text-white", accent: "text-pink",
       hoverBorder: "group-hover:[border-top-color:#ff2d9b]",
-      category: "concerts", genreId: "dark-ambient",
+      category: "concerts", genreId: "dark-ambient", eventId: "king-vibe",
     },
     {
       image: "/event_1.png", artist: "Aurora", genre: "Ambient Cosmique", origin: "NO",
@@ -303,13 +304,9 @@ export default function ProgrammePage() {
         {/* ── CARDS ───────────────────────────────────────────────── */}
         {filteredSlots.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-[#252525]">
-            {filteredSlots.map((e, index) => (
-              <div
-                key={`${e.artist}-${e.time}`}
-                className={`relative overflow-hidden group border-t-2 lg:border-t-0 border-l-2 border-transparent transition-all duration-300 ${e.hoverBorder} ${
-                  index === 0 ? 'lg:border-l-0' : ''
-                }`}
-              >
+            {filteredSlots.map((e, index) => {
+              const cardClass = `relative overflow-hidden group border-t-2 lg:border-t-0 border-l-2 border-transparent transition-all duration-300 ${e.hoverBorder} ${index === 0 ? 'lg:border-l-0' : ''}`;
+              const inner = (
                 <div className="relative aspect-[4/3] lg:aspect-[3/4] w-full h-[280px] lg:h-[400px]">
                   <Image
                     src={e.image}
@@ -355,8 +352,22 @@ export default function ProgrammePage() {
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+
+              return e.eventId ? (
+                <Link
+                  key={`${e.artist}-${e.time}`}
+                  href={`/programme/${e.eventId}`}
+                  className={cardClass}
+                >
+                  {inner}
+                </Link>
+              ) : (
+                <div key={`${e.artist}-${e.time}`} className={cardClass}>
+                  {inner}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className="px-8 py-20 text-center">
