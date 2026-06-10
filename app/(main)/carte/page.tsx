@@ -1,9 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 const mapControls = [
   {
     label: "Zoom avant",
+    action: "zoomIn",
     icon: (
       <path
         d="M12 5v14M5 12h14"
@@ -15,6 +19,7 @@ const mapControls = [
   },
   {
     label: "Zoom arrière",
+    action: "zoomOut",
     icon: (
       <path
         d="M5 12h14"
@@ -26,15 +31,10 @@ const mapControls = [
   },
   {
     label: "Me localiser",
+    action: "reset",
     icon: (
       <>
-        <circle
-          cx="12"
-          cy="12"
-          r="5"
-          stroke="currentColor"
-          strokeWidth="1.8"
-        />
+        <circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="1.8" />
         <circle cx="12" cy="12" r="1.8" fill="currentColor" />
         <path
           d="M12 3v3M12 18v3M3 12h3M18 12h3"
@@ -54,19 +54,40 @@ const nearbyPlaces = [
 ];
 
 export default function CartePage() {
+  const [zoom, setZoom] = useState(1.18);
+
+  const updateZoom = (action: string) => {
+    if (action === "zoomIn") {
+      setZoom((currentZoom) => Math.min(currentZoom + 0.18, 2));
+      return;
+    }
+
+    if (action === "zoomOut") {
+      setZoom((currentZoom) => Math.max(currentZoom - 0.18, 1));
+      return;
+    }
+
+    setZoom(1.18);
+  };
+
   return (
     <section className="-mt-14 min-h-screen bg-dark">
       <div className="mx-auto min-h-screen w-full max-w-[430px] bg-[#171719] pt-14 md:border-x md:border-dark-border lg:grid lg:max-w-none lg:grid-cols-[minmax(0,1fr)_430px] lg:border-x-0">
         <div className="relative h-[45vh] min-h-[326px] overflow-hidden border-b border-dark-border lg:h-[calc(100vh-3.5rem)] lg:min-h-[650px] lg:border-b-0 lg:border-r">
-          <Image
-            src="/map_homepage.png"
-            alt="Carte de Fatal Fields"
-            fill
-            priority
-            sizes="(max-width: 1024px) 100vw, calc(100vw - 430px)"
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-black/5 lg:bg-black/10" />
+          <div
+            className="absolute inset-0 transition-transform duration-300 ease-out"
+            style={{ transform: `scale(${zoom})` }}
+          >
+            <Image
+              src="/fatal_fields_winter_map.webp"
+              alt="Vue aérienne enneigée de Fatal Fields"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, calc(100vw - 430px)"
+              className="object-cover object-center"
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/25 lg:bg-gradient-to-br lg:from-black/30 lg:via-transparent lg:to-black/35" />
 
           <div className="absolute left-8 top-8 hidden lg:block">
             <p className="font-condensed text-[11px] font-semibold uppercase tracking-[0.3em] text-white/55">
@@ -84,6 +105,7 @@ export default function CartePage() {
                 type="button"
                 aria-label={control.label}
                 title={control.label}
+                onClick={() => updateZoom(control.action)}
                 className="grid size-10 place-items-center bg-[#222225]/95 text-white shadow-[0_8px_20px_rgba(0,0,0,0.35)] transition-colors hover:bg-[#303034] focus:outline-none focus:ring-2 focus:ring-lime"
               >
                 <svg
@@ -132,7 +154,6 @@ export default function CartePage() {
 
         <div className="relative px-11 pb-32 pt-8 lg:flex lg:min-h-[calc(100vh-3.5rem)] lg:flex-col lg:justify-center lg:px-10 lg:pb-40 lg:pt-20">
           <span className="mx-auto mb-12 block h-1 w-12 rounded-full bg-white/10 lg:hidden" />
-          <div className="mb-6 h-20 w-1.5 bg-pink lg:h-28" />
 
           <div className="flex items-center gap-3">
             <span className="bg-pink px-2.5 py-1 font-condensed text-[10px] font-bold uppercase leading-none tracking-[0.1em] text-white">
@@ -155,13 +176,17 @@ export default function CartePage() {
 
           <div className="mt-8 hidden grid-cols-2 border-y border-white/10 lg:grid">
             <div className="border-r border-white/10 py-5">
-              <p className="font-display text-4xl leading-none text-lime">23:00</p>
+              <p className="font-display text-4xl leading-none text-lime">
+                23:00
+              </p>
               <p className="mt-1 font-condensed text-[10px] uppercase tracking-[0.25em] text-white/45">
                 Prochain set
               </p>
             </div>
             <div className="py-5 pl-6">
-              <p className="font-display text-4xl leading-none text-cyan">420M</p>
+              <p className="font-display text-4xl leading-none text-cyan">
+                420M
+              </p>
               <p className="mt-1 font-condensed text-[10px] uppercase tracking-[0.25em] text-white/45">
                 Depuis entrée
               </p>
