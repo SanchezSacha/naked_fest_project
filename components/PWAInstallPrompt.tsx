@@ -180,7 +180,16 @@ export default function PWAInstallPrompt() {
             {platform === "ios" ? (
               <IosTutorial />
             ) : platform === "macos" ? (
-              <MacTutorial />
+              deferredPrompt ? (
+                <button
+                  onClick={handleAndroidInstall}
+                  className="w-full rounded-xl bg-lime py-3.5 font-condensed text-base font-bold uppercase tracking-widest text-dark transition-opacity"
+                >
+                  Télécharger l&apos;application
+                </button>
+              ) : (
+                <MacChromeTutorial />
+              )
             ) : (
               <button
                 onClick={handleAndroidInstall}
@@ -191,7 +200,7 @@ export default function PWAInstallPrompt() {
               </button>
             )}
 
-            {platform !== "ios" && !deferredPrompt && (
+            {platform !== "ios" && platform !== "macos" && !deferredPrompt && (
               <p className="mt-3 text-center text-xs text-white/40">
                 Ouvre le menu de ton navigateur puis choisis
                 {isDesktop ? " « Installer Naked Fest »" : " « Ajouter à l'écran d'accueil »"}.
@@ -329,8 +338,44 @@ function MacTutorial() {
           </li>
         ))}
       </ol>
+    </div>
+  );
+}
+
+function MacChromeTutorial() {
+  return (
+    <div className="rounded-xl border border-dark-border bg-black/40 p-4">
+      <p className="mb-3 font-condensed text-sm font-semibold uppercase tracking-widest text-cyan">
+        Installation sur Mac
+      </p>
+      <ol className="space-y-3">
+        <li className="flex items-center gap-3">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5 font-condensed text-sm font-bold text-white/80">
+            1
+          </span>
+          <span className="text-sm text-white/80">
+            Clique sur le menu <strong className="text-white">⋮</strong> (Chrome/Edge)
+          </span>
+        </li>
+        <li className="flex items-center gap-3">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5 font-condensed text-sm font-bold text-white/80">
+            2
+          </span>
+          <span className="text-sm text-white/80">
+            Choisis <strong className="text-white">Installer N&apos;FEST</strong>
+          </span>
+        </li>
+        <li className="flex items-center gap-3">
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5 font-condensed text-sm font-bold text-white/80">
+            3
+          </span>
+          <span className="text-sm text-white/80">
+            L&apos;app s&apos;ouvre comme une fenêtre native
+          </span>
+        </li>
+      </ol>
       <p className="mt-3 text-xs text-white/40">
-        Chrome/Edge : utilise le bouton ci-dessus si disponible.
+        Sur Safari : utilisez « Ajouter au Dock » via le menu Partager.
       </p>
     </div>
   );
