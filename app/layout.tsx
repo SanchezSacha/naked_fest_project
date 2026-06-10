@@ -23,6 +23,38 @@ export const metadata: Metadata = {
   title: "Naked Fest Winter'27",
   description: "La libération par le froid & le son — festival hivernal extrême",
   manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "N'FEST",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Naked Fest Winter'27",
+    title: "Naked Fest Winter'27",
+    description: "La libération par le froid & le son — festival hivernal extrême",
+    images: [
+      {
+        url: "/necked_fest_homepage_1.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Naked Fest Winter'27 — Fatal Fields, Ardennes",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Naked Fest Winter'27",
+    description: "La libération par le froid & le son — festival hivernal extrême",
+    images: ["/necked_fest_homepage_1.jpg"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
 };
 
 export const viewport: Viewport = {
