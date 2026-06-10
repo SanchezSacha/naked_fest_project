@@ -2,9 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import ProgrammeUserBar from "@/components/ProgrammeUserBar";
 import { useState, useMemo } from "react";
+import ProgrammeUserBar from "@/components/ProgrammeUserBar";
 import ProgramFilters from "@/components/ProgramFilters";
 
 /* ─── DATA ─────────────────────────────────────────────────────── */

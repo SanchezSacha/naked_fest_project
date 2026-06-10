@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Bebas_Neue, Barlow_Condensed, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 const bebasNeue = Bebas_Neue({
   variable: "--font-bebas-neue",
@@ -52,8 +54,8 @@ export const metadata: Metadata = {
     images: ["/necked_fest_homepage_1.jpg"],
   },
   icons: {
-    icon: "/favicon.ico",
-    apple: "/favicon.ico",
+    icon: "/icon-192.png",
+    apple: "/apple-touch-icon.png",
   },
 };
 
@@ -75,8 +77,24 @@ export default function RootLayout({
       lang="fr"
       className={`${bebasNeue.variable} ${barlowCondensed.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.__pwaPrompt = window.__pwaPrompt || null;
+              window.addEventListener('beforeinstallprompt', function (e) {
+                e.preventDefault();
+                window.__pwaPrompt = e;
+                window.dispatchEvent(new Event('pwa-installable'));
+              });
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-dark text-white">
         {children}
+        <ServiceWorkerRegister />
+        <PWAInstallPrompt />
       </body>
     </html>
   );
