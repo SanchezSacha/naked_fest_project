@@ -19,15 +19,18 @@ const events = [
   { image: "/event_1.png",  artist: "Frontex",  genre: "Techno Industrielle", origin: "DE",
     date: "SAM 25", time: "23:00",
     dateBg: "bg-lime",  dateText: "text-dark",
-    hoverBorder: "group-hover:[border-top-color:#c8ff00]" },
+    hoverBorder: "group-hover:[border-top-color:#c8ff00]",
+    href: "/programme/frontex" },
   { image: "/Event_2.png", artist: "King Vibe", genre: "Experimental Noise",  origin: "NO",
     date: "DIM 26", time: "02:00",
     dateBg: "bg-pink",  dateText: "text-white",
-    hoverBorder: "group-hover:[border-top-color:#ff2d9b]" },
+    hoverBorder: "group-hover:[border-top-color:#ff2d9b]",
+    href: "/programme/king-vibe" },
   { image: "/event_3.png", artist: "2nd-Gen",   genre: "Glitch Ambient",      origin: "FR",
     date: "VEN 24", time: "22:00",
     dateBg: "bg-cyan",  dateText: "text-dark",
-    hoverBorder: "group-hover:[border-top-color:#00f5ff]" },
+    hoverBorder: "group-hover:[border-top-color:#00f5ff]",
+    href: "/programme/2nd-gen" },
 ];
 
 const infos = [
@@ -193,7 +196,7 @@ export default function HomePage() {
           {events.map((e) => (
             <Link
               key={e.artist}
-              href="/programme"
+              href={e.href}
               className={`relative block overflow-hidden group border-t-2 border-transparent transition-all duration-300 ${e.hoverBorder}`}
             >
               <div className="relative aspect-[3/4] md:aspect-auto md:h-[460px] w-full">
