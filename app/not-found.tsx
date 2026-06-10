@@ -56,7 +56,7 @@ export default function NotFound() {
             <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
               <Link
                 href="/"
-                className="border-2 border-lime bg-lime text-dark font-condensed font-bold text-sm px-12 py-4 tracking-[0.3em] uppercase transition-all duration-300 hover:bg-transparent hover:text-lime"
+                className="border-2 border-lime bg-lime text-dark font-condensed font-bold text-sm px-12 py-4 tracking-[0.3em] uppercase transition-all duration-300 hover:bg-[#111113] hover:[color:var(--neon-lime)]"
               >
                 Retour à l&apos;accueil
               </Link>

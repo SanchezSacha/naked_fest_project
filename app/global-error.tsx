@@ -95,7 +95,7 @@ export default function GlobalError({
                 <button
                   type="button"
                   onClick={() => unstable_retry()}
-                  className="border-2 border-lime bg-lime text-dark font-condensed font-bold text-sm px-12 py-4 tracking-[0.3em] uppercase transition-all duration-300 hover:bg-transparent hover:text-lime"
+                  className="border-2 border-lime bg-lime text-dark font-condensed font-bold text-sm px-12 py-4 tracking-[0.3em] uppercase transition-all duration-300 hover:bg-[#111113] hover:[color:var(--neon-lime)]"
                 >
                   Relancer
                 </button>
