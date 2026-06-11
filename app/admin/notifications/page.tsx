@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getPushConfigStatus } from "@/lib/push";
 import AdminPushForm from "@/components/AdminPushForm";
 import AdminTopicManager from "@/components/AdminTopicManager";
+import AdminScheduledManager from "@/components/AdminScheduledManager";
 
 export const metadata = {
   title: "Admin · Notifications",
@@ -60,6 +61,10 @@ export default async function AdminNotificationsPage() {
         <>
           <div className="mb-12">
             <AdminTopicManager />
+          </div>
+          <hr className="mb-12 border-white/10" />
+          <div className="mb-12">
+            <AdminScheduledManager />
           </div>
           <hr className="mb-12 border-white/10" />
           <AdminPushForm />

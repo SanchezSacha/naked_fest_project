@@ -319,7 +319,8 @@ model PushTopic {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  subscriptions PushSubscriptionTopic[]
+  subscriptions   PushSubscriptionTopic[]
+  scheduledPushes ScheduledPush[]
 
   @@index([isDefault])
 }
@@ -414,4 +415,28 @@ enum ReminderDelay {
   HOURS_24
   HOURS_2
   MINUTES_30
+}
+
+// Notifications push programmées à une heure précise
+model ScheduledPush {
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(120)
+  body        String    @db.VarChar(500)
+  url         String?   @db.VarChar(500)
+  scheduledAt DateTime  // Heure exacte d'envoi
+  sentAt      DateTime? // null = pas encore envoyé
+  cancelledAt DateTime? // null = pas annulé
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Optionnel : filtrer par topic
+  topicId Int?
+  topic   PushTopic? @relation(fields: [topicId], references: [id], onDelete: SetNull)
+
+  createdById Int?
+
+  @@index([scheduledAt])
+  @@index([sentAt])
+  @@index([cancelledAt])
+  @@index([topicId])
 }
