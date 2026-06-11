@@ -34,11 +34,11 @@ const baseClasses =
 
 /* ── Mappings statiques pour Tailwind v4 ── */
 const solidMap: Record<ButtonColor, string> = {
-  lime:   "bg-lime text-dark border border-lime hover:opacity-80",
-  pink:   "bg-pink text-dark border border-pink hover:opacity-80",
-  cyan:   "bg-cyan text-dark border border-cyan hover:opacity-80",
-  violet: "bg-violet text-dark border border-violet hover:opacity-80",
-  white:  "bg-white text-dark border border-white hover:bg-white/90",
+  lime:   "bg-lime text-dark border border-lime hover:bg-dark hover:text-lime hover:shadow-[0_0_18px_rgba(200,255,0,0.25)]",
+  pink:   "bg-pink text-dark border border-pink hover:bg-dark hover:text-pink hover:shadow-[0_0_18px_rgba(255,45,155,0.25)]",
+  cyan:   "bg-cyan text-dark border border-cyan hover:bg-dark hover:text-cyan hover:shadow-[0_0_18px_rgba(0,245,255,0.25)]",
+  violet: "bg-violet text-dark border border-violet hover:bg-dark hover:text-violet hover:shadow-[0_0_18px_rgba(191,95,255,0.25)]",
+  white:  "bg-white text-dark border border-white hover:bg-dark hover:text-white hover:shadow-[0_0_18px_rgba(255,255,255,0.12)]",
 };
 
 const solidDarkMap: Record<ButtonColor, string> = {
@@ -58,11 +58,11 @@ const outlineMap: Record<ButtonColor, string> = {
 };
 
 const outlineInverseMap: Record<ButtonColor, string> = {
-  lime:   "bg-transparent text-lime border border-lime hover:bg-lime hover:text-dark",
-  pink:   "bg-transparent text-pink border border-pink hover:bg-pink hover:text-dark",
-  cyan:   "bg-transparent text-cyan border border-cyan hover:bg-cyan hover:text-dark",
-  violet: "bg-transparent text-violet border border-violet hover:bg-violet hover:text-dark",
-  white:  "bg-transparent text-white border border-white/30 hover:bg-white hover:text-dark",
+  lime:   "bg-transparent text-lime border border-lime hover:bg-lime/20",
+  pink:   "bg-transparent text-pink border border-pink hover:bg-pink/20",
+  cyan:   "bg-transparent text-cyan border border-cyan hover:bg-cyan/20",
+  violet: "bg-transparent text-violet border border-violet hover:bg-violet/20",
+  white:  "bg-transparent text-white border border-white/30 hover:bg-white/20 hover:border-white",
 };
 
 const ghostMap: Record<ButtonColor, string> = {
