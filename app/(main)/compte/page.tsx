@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { type FormEvent, useRef, useState } from "react";
+import Button from "@/components/Button";
 
 // ── Champ de formulaire ────────────────────────────────────────────────────
 
@@ -120,13 +121,9 @@ function DeleteModal({
           </div>
 
           <div className="mt-8 flex gap-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 border border-white/20 bg-white/5 px-4 py-3 font-condensed text-xs uppercase tracking-[0.18em] text-white/70 transition-all duration-300 hover:bg-white/10 hover:text-white hover:shadow-[0_0_18px_rgba(255,255,255,0.08)]"
-            >
+            <Button onClick={onClose} color="white" variant="subtle" size="sm" className="flex-1">
               Annuler
-            </button>
+            </Button>
             <button
               type="submit"
               disabled={isPending}
@@ -274,13 +271,9 @@ export default function AccountPage() {
                       </p>
                     )}
 
-                    <button
-                      type="button"
-                      onClick={() => { setIsEditing(true); setEditSuccess(false); }}
-                      className="mt-8 border border-lime bg-lime px-5 py-3 font-condensed text-xs font-bold uppercase tracking-[0.18em] text-dark transition-all duration-300 hover:bg-[#111113] hover:[color:var(--neon-lime)] hover:shadow-[0_0_18px_rgba(200,255,0,0.25)]"
-                    >
+                    <Button onClick={() => { setIsEditing(true); setEditSuccess(false); }} color="lime" variant="solid-dark" size="sm" className="mt-8">
                       Modifier les informations
-                    </button>
+                    </Button>
                   </>
                 ) : (
                   <form onSubmit={handleEditSubmit} className="mt-6 space-y-5">
@@ -339,20 +332,12 @@ export default function AccountPage() {
                     )}
 
                     <div className="flex gap-3 pt-2">
-                      <button
-                        type="submit"
-                        disabled={isSaving}
-                        className="border-2 border-lime bg-lime px-7 py-3 font-condensed text-xs font-bold uppercase tracking-[0.22em] text-dark transition-all duration-300 hover:bg-[#111113] hover:[color:var(--neon-lime)] hover:shadow-[0_0_18px_rgba(200,255,0,0.25)] disabled:opacity-50"
-                      >
+                      <Button type="submit" color="lime" variant="solid-dark" size="sm" disabled={isSaving}>
                         {isSaving ? "Enregistrement..." : "Enregistrer"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => { setIsEditing(false); setEditError(null); setPasswordError(null); }}
-                        className="px-5 py-3 font-condensed text-xs uppercase tracking-[0.18em] text-white/45 transition-colors hover:text-white"
-                      >
+                      </Button>
+                      <Button onClick={() => { setIsEditing(false); setEditError(null); setPasswordError(null); }} color="white" variant="ghost" size="sm">
                         Annuler
-                      </button>
+                      </Button>
                     </div>
                   </form>
                 )}

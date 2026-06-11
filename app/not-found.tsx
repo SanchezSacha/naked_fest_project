@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
+import Button from "@/components/Button";
 
 export default function NotFound() {
   return (
@@ -54,18 +55,12 @@ export default function NotFound() {
 
             {/* CTAs */}
             <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
-              <Link
-                href="/"
-                className="border-2 border-lime bg-lime text-dark font-condensed font-bold text-sm px-12 py-4 tracking-[0.3em] uppercase transition-all duration-300 hover:bg-[#111113] hover:[color:var(--neon-lime)]"
-              >
+              <Button as="link" href="/" color="lime" variant="solid-dark" size="lg">
                 Retour à l&apos;accueil
-              </Link>
-              <Link
-                href="/programme"
-                className="border border-dark-border text-white/70 font-condensed font-bold text-xs px-8 py-4 tracking-[0.3em] uppercase transition-all duration-300 hover:border-cyan hover:text-cyan"
-              >
+              </Button>
+              <Button as="link" href="/programme" color="cyan" variant="outline" size="md">
                 Voir le programme
-              </Link>
+              </Button>
             </div>
           </div>
         </section>

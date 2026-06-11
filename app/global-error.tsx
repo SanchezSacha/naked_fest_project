@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Bebas_Neue, Barlow_Condensed, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
+import Button from "@/components/Button";
 
 const bebasNeue = Bebas_Neue({
   variable: "--font-bebas-neue",
@@ -92,19 +93,12 @@ export default function GlobalError({
               )}
 
               <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => unstable_retry()}
-                  className="border-2 border-lime bg-lime text-dark font-condensed font-bold text-sm px-12 py-4 tracking-[0.3em] uppercase transition-all duration-300 hover:bg-[#111113] hover:[color:var(--neon-lime)]"
-                >
+                <Button onClick={() => unstable_retry()} color="lime" variant="solid-dark" size="lg">
                   Relancer
-                </button>
-                <Link
-                  href="/"
-                  className="border border-dark-border text-white/70 font-condensed font-bold text-xs px-8 py-4 tracking-[0.3em] uppercase transition-all duration-300 hover:border-cyan hover:text-cyan"
-                >
+                </Button>
+                <Button as="link" href="/" color="cyan" variant="outline" size="md">
                   Retour à l&apos;accueil
-                </Link>
+                </Button>
               </div>
             </div>
           </section>

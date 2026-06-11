@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Button from "@/components/Button";
 
 /* ─── DATA ─────────────────────────────────────────────────────── */
 
@@ -108,10 +109,7 @@ export default function HomePage() {
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
-            <Link
-              href="/programme"
-              className="group border-2 border-lime bg-lime text-dark font-condensed font-bold text-xs px-8 py-4 tracking-[0.3em] uppercase transition-all duration-300 hover:bg-transparent hover:text-lime flex items-center gap-3"
-            >
+            <Button as="link" href="/programme" color="lime" variant="solid-dark" size="lg" className="gap-3">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <rect x="3" y="4" width="18" height="18" rx="2" />
                 <line x1="16" y1="2" x2="16" y2="6" />
@@ -119,18 +117,15 @@ export default function HomePage() {
                 <line x1="3" y1="10" x2="21" y2="10" />
               </svg>
               Programme
-            </Link>
-            <Link
-              href="/carte"
-              className="group border border-white/30 text-white font-condensed font-bold text-xs px-8 py-4 tracking-[0.3em] uppercase transition-all duration-300 hover:border-lime hover:text-lime flex items-center gap-3"
-            >
+            </Button>
+            <Button as="link" href="/carte" color="white" variant="outline" size="lg" className="gap-3">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
                 <line x1="9" y1="3" x2="9" y2="18" />
                 <line x1="15" y1="6" x2="15" y2="21" />
               </svg>
               Carte
-            </Link>
+            </Button>
           </div>
         </div>
 
@@ -277,17 +272,14 @@ export default function HomePage() {
                 Un domaine de 50 hectares dans les Ardennes transformé en zone de
                 liberté radicale. 5 scènes, 2 bars thermiques, 1 sanctuaire de glace, 1 station ski, 1 igloo VIP.
               </p>
-              <Link
-                href="/carte"
-                className="inline-flex items-center gap-3 border border-lime text-lime font-condensed font-bold text-xs px-6 py-3.5 tracking-[0.25em] uppercase transition-all duration-300 hover:bg-lime hover:text-dark"
-              >
+              <Button as="link" href="/carte" color="lime" variant="outline-inverse" size="md" className="gap-3">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
                   <line x1="9" y1="3" x2="9" y2="18" />
                   <line x1="15" y1="6" x2="15" y2="21" />
                 </svg>
                 Ouvrir la carte
-              </Link>
+              </Button>
             </div>
           </div>
 
