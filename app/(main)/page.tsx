@@ -305,7 +305,7 @@ export default async function HomePage() {
           </div>
           <div className="relative order-1 h-80 min-h-[400px] overflow-hidden lg:order-2 lg:h-auto">
             <Image
-              src={home.mapImage}
+              src="/fatal_fields_winter_map.webp"
               alt={`Carte ${home.mapTitle}`}
               fill
               className="object-cover transition-transform duration-700 hover:scale-105"
