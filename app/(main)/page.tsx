@@ -4,46 +4,46 @@ import Link from "next/link";
 /* ─── DATA ─────────────────────────────────────────────────────── */
 
 const features = [
-  { icon: "/Icon_song.svg",  iconAlt: "Musique", w: 27, h: 30,
+  { icon: "/Icon_song.svg",  iconAlt: "Musique", w: 32, h: 32,
     title: "Musique Extrême",
-    description: "Techno industrielle, Metal expérimental, Noise radicale. Un mur de son contre le gel." },
-  { icon: "/Icon_human.svg", iconAlt: "Liberté", w: 27, h: 30,
+    description: "Techno industrielle, Metal expérimental, Noise radicale. Un mur de son contre le gel.",
+    color: "lime" },
+  { icon: "/Icon_human.svg", iconAlt: "Liberté", w: 32, h: 32,
     title: "Liberté Totale",
-    description: "L'expérience nudiste ultime en environnement hostile. Brisez les chaînes du vêtement." },
-  { icon: "/Icon_cold.svg",  iconAlt: "Froid",   w: 30, h: 30,
+    description: "L'expérience nudiste ultime en environnement hostile. Brisez les chaînes du vêtement.",
+    color: "pink" },
+  { icon: "/Icon_cold.svg",  iconAlt: "Froid",   w: 32, h: 32,
     title: "Froid Radical",
-    description: "-6°C en moyenne. Le choc thermique comme catalyseur d'adrénaline pure." },
+    description: "-6°C en moyenne. Le choc thermique comme catalyseur d'adrénaline pure.",
+    color: "cyan" },
 ];
 
 const events = [
   { image: "/event_1.png",  artist: "Frontex",  genre: "Techno Industrielle", origin: "DE",
-    date: "SAM 25", time: "23:00",
-    dateBg: "bg-lime",  dateText: "text-dark",
-    hoverBorder: "group-hover:[border-top-color:#c8ff00]",
+    date: "SAM 25", time: "23:00", day: "Samedi",
+    color: "lime",
     href: "/programme/frontex" },
   { image: "/Event_2.png", artist: "King Vibe", genre: "Experimental Noise",  origin: "NO",
-    date: "DIM 26", time: "02:00",
-    dateBg: "bg-pink",  dateText: "text-white",
-    hoverBorder: "group-hover:[border-top-color:#ff2d9b]",
+    date: "DIM 26", time: "02:00", day: "Dimanche",
+    color: "pink",
     href: "/programme/king-vibe" },
   { image: "/event_3.png", artist: "2nd-Gen",   genre: "Glitch Ambient",      origin: "FR",
-    date: "VEN 24", time: "22:00",
-    dateBg: "bg-cyan",  dateText: "text-dark",
-    hoverBorder: "group-hover:[border-top-color:#00f5ff]",
+    date: "VEN 24", time: "22:00", day: "Vendredi",
+    color: "cyan",
     href: "/programme/2nd-gen" },
 ];
 
 const infos = [
-  { num: "01", numColor: "text-lime",
+  { num: "01", color: "lime",
     title: "Lieu & Accès",
     body: "Forêt des Ardennes, France. Navettes depuis Charleville-Mézières toutes les heures. Parkings sécurisés." },
-  { num: "02", numColor: "text-pink",
+  { num: "02", color: "pink",
     title: "Charte Nudiste",
     body: "Nudité obligatoire sur l'ensemble du site (exceptions météo extrêmes signalées). Respect absolu, zéro photo." },
-  { num: "03", numColor: "text-cyan",
+  { num: "03", color: "cyan",
     title: "Équipement",
     body: "Prévoyez des peaux de bêtes synthétiques pour les déplacements. Zones chauffées à 25°C disponibles 24/7." },
-  { num: "04", numColor: "text-violet",
+  { num: "04", color: "violet",
     title: "Sécurité",
     body: "Équipe médicale spécialisée en hypothermie. Safe zones présentes sur chaque scène." },
 ];
@@ -54,175 +54,213 @@ export default function HomePage() {
   return (
     <>
       {/* ── HERO ──────────────────────────────────────────────────── */}
-      <section className="relative min-h-screen -mt-14 flex flex-col items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen -mt-14 lg:-mt-16 flex flex-col items-center justify-center overflow-hidden">
         <Image
           src="/necked_fest_homepage_1.jpg"
           alt="Naked Fest Winter 27 — Fatal Fields, Ardennes"
           fill
-          className="object-cover object-center"
+          className="object-cover object-center scale-105 animate-hero-zoom"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/25 to-black/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/95" />
 
-        <div className="relative z-10 flex flex-col items-center text-center px-8 gap-3">
-          {/* Date badge */}
-          <span className="font-condensed text-pink text-xs tracking-[0.4em] uppercase">
-            24 — 26 Jan · 2027
-          </span>
+        <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-8 gap-4">
+          {/* Date badge glass */}
+          <div className="glass px-5 py-2 rounded-full">
+            <span className="font-condensed text-pink text-xs tracking-[0.4em] uppercase">
+              24 — 26 Jan · 2027
+            </span>
+          </div>
 
-          <h1 className="font-display leading-none uppercase mt-2">
-            {/* NAKED FEST */}
-            <span className="block text-[clamp(68px,20vw,120px)] text-white">
+          {/* Main title avec glow */}
+          <h1 className="font-display leading-none uppercase mt-4">
+            <span className="block text-[clamp(60px,18vw,140px)] text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
               Naked Fest
             </span>
-
-            {/* WINTER 27 — triple neon layer symétrique */}
-            <span className="relative block text-[clamp(42px,13vw,78px)]">
-              {/* Rose — haut-gauche */}
-              <span
-                className="absolute inset-0 text-pink select-none"
-                aria-hidden="true"
-                style={{ transform: "translate(-5px, -5px)" }}
-              >
-                Winter 27
-              </span>
-              {/* Lime — bas-droite */}
-              <span
-                className="absolute inset-0 text-lime select-none"
-                aria-hidden="true"
-                style={{ transform: "translate(5px, 5px)" }}
-              >
-                Winter 27
-              </span>
-              {/* Blanc — centré entre les deux couches */}
-              <span className="relative text-white">Winter 27</span>
+            <span className="block text-[clamp(36px,11vw,80px)] text-gradient mt-2">
+              Winter 27
             </span>
           </h1>
 
-          {/* Tagline — neon cyan */}
-          <p className="font-condensed text-cyan text-sm tracking-[0.3em] uppercase mt-3">
+          {/* Tagline */}
+          <p className="font-condensed text-cyan text-sm md:text-base tracking-[0.3em] uppercase mt-2">
             La libération par le froid &amp; le son
           </p>
 
           {/* Location */}
-          <span className="font-condensed text-white/40 text-[11px] tracking-[0.2em] uppercase">
+          <span className="font-condensed text-white/50 text-xs tracking-[0.2em] uppercase">
             Fatal Fields · Ardennes, France
           </span>
 
-          {/* CTA — lime solid → transparent outline on hover */}
-          <Link
-            href="/programme"
-            className="mt-10 border-2 border-lime bg-lime text-dark font-condensed font-bold text-sm px-14 py-5 tracking-[0.35em] uppercase transition-all duration-300 hover:bg-[#111113] hover:[color:var(--neon-lime)]"
-          >
-            Programme
-          </Link>
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-4 mt-8">
+            <Link
+              href="/programme"
+              className="group border-2 border-lime bg-lime text-dark font-condensed font-bold text-xs px-8 py-4 tracking-[0.3em] uppercase transition-all duration-300 hover:bg-transparent hover:text-lime flex items-center gap-3"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              Programme
+            </Link>
+            <Link
+              href="/carte"
+              className="group border border-white/30 text-white font-condensed font-bold text-xs px-8 py-4 tracking-[0.3em] uppercase transition-all duration-300 hover:border-lime hover:text-lime flex items-center gap-3"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
+                <line x1="9" y1="3" x2="9" y2="18" />
+                <line x1="15" y1="6" x2="15" y2="21" />
+              </svg>
+              Carte
+            </Link>
+          </div>
         </div>
 
-        {/* Scroll arrow */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/25 animate-bounce">
-          <svg width="18" height="28" viewBox="0 0 18 28" fill="none" aria-hidden="true">
-            <path d="M9 2V24M9 24L2 17M9 24L16 17"
-              stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30">
+          <span className="font-condensed text-[10px] tracking-[0.2em] uppercase">Scroll</span>
+          <div className="w-px h-8 bg-gradient-to-b from-white/50 to-transparent animate-pulse" />
+        </div>
+      </section>
+
+      {/* ── QUICK NAV ─────────────────────────────────────────────── */}
+      <section className="border-b border-dark-border/60">
+        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-dark-border/60">
+          {[
+            { href: "/programme", label: "Programme", icon: "📅" },
+            { href: "/carte", label: "Carte", icon: "🗺️" },
+            { href: "/favoris", label: "Favoris", icon: "⭐" },
+            { href: "/compte", label: "Compte", icon: "👤" },
+          ].map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="group flex flex-col items-center gap-2 py-6 px-4 hover:bg-white/[0.02] transition-colors"
+            >
+              <span className="text-xl">{item.icon}</span>
+              <span className="font-condensed text-xs tracking-[0.15em] uppercase text-white/60 group-hover:text-lime transition-colors">
+                {item.label}
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 
       {/* ── FEATURES ──────────────────────────────────────────────── */}
-      <section className="border-b border-[#252525] mt-2">
-        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#252525]">
-          {features.map((f) => (
-            <div
-              key={f.title}
-              className="group flex flex-col items-center text-center px-12 py-24 transition-colors duration-300 hover:bg-white/[0.02]"
-            >
-              <div className="mb-10 transition-transform duration-300 group-hover:scale-110">
-                <Image src={f.icon} alt={f.iconAlt} width={f.w} height={f.h} />
+      <section className="px-6 py-20 md:px-12 md:py-28">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            {features.map((f) => (
+              <div
+                key={f.title}
+                className="group glass border border-white/5 rounded-2xl p-8 hover:border-lime/20 transition-all duration-300 hover-lift"
+              >
+                <div className={`w-14 h-14 rounded-xl bg-${f.color}/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                  <Image src={f.icon} alt={f.iconAlt} width={f.w} height={f.h} className={`text-${f.color}`} />
+                </div>
+                <h2 className="font-display text-3xl lg:text-4xl leading-none uppercase text-white mb-4">
+                  {f.title}
+                </h2>
+                <p className="text-white/50 text-sm leading-relaxed">
+                  {f.description}
+                </p>
               </div>
-              <h2 className="font-display text-[clamp(28px,6vw,40px)] leading-none uppercase text-white">
-                {f.title}
-              </h2>
-              <p className="mt-6 text-white/45 text-sm leading-relaxed max-w-[260px]">
-                {f.description}
-              </p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── STATS ─────────────────────────────────────────────────── */}
+      <section className="border-y border-dark-border/60">
+        <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-dark-border/60">
+          {[
+            { value: "03", label: "Nuits Blanches", color: "lime" },
+            { value: "-06°C", label: "Température Min", color: "pink" },
+            { value: "48H", label: "Set Non-Stop", color: "cyan" },
+            { value: "∞", label: "Chaleur Humaine", color: "violet" },
+          ].map((stat) => (
+            <div key={stat.label} className="flex flex-col items-center justify-center text-center px-6 py-16 md:py-20 hover:bg-white/[0.02] transition-colors">
+              <span className={`font-display text-[clamp(48px,10vw,72px)] leading-none text-${stat.color}`}>
+                {stat.value}
+              </span>
+              <span className="font-condensed text-xs tracking-[0.3em] text-white/40 uppercase mt-3">
+                {stat.label}
+              </span>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── STATS ─────────────────────────────────────────────────── */}
-      <section className="border-b border-[#252525] mt-2">
-        <div className="grid grid-cols-2 divide-x divide-y divide-[#252525]">
-          <div className="flex flex-col items-center justify-center text-center px-10 py-24 md:py-28">
-            <span className="font-display text-[clamp(64px,16vw,96px)] leading-none text-lime">03</span>
-            <span className="font-condensed text-[10px] tracking-[0.35em] text-white/40 uppercase mt-4">Nuits Blanches</span>
-          </div>
-          <div className="flex flex-col items-center justify-center text-center px-10 py-24 md:py-28">
-            <span className="font-display text-[clamp(48px,13vw,80px)] leading-none text-pink">-06°C</span>
-            <span className="font-condensed text-[10px] tracking-[0.35em] text-white/40 uppercase mt-4">Température Min</span>
-          </div>
-          <div className="flex flex-col items-center justify-center text-center px-10 py-24 md:py-28">
-            <span className="font-display text-[clamp(64px,16vw,96px)] leading-none text-cyan">48H</span>
-            <span className="font-condensed text-[10px] tracking-[0.35em] text-white/40 uppercase mt-4">Set Non-Stop</span>
-          </div>
-          <div className="flex flex-col items-center justify-center text-center px-10 py-24 md:py-28">
-            <span className="font-display text-[clamp(64px,16vw,96px)] leading-none text-lime">∞</span>
-            <span className="font-condensed text-[10px] tracking-[0.35em] text-white/40 uppercase mt-4">Chaleur Humaine</span>
-          </div>
-        </div>
-      </section>
-
-      {/* ── PROGRAMME / EVENTS ────────────────────────────────────── */}
-      <section className="border-b border-[#252525] mt-2">
-        {/* Section header */}
-        <div className="flex items-center justify-between px-8 py-7 border-b border-[#252525] md:px-10">
-          <h2 className="font-display text-3xl md:text-4xl text-white uppercase tracking-wide">Programme</h2>
-          <Link
-            href="/programme"
-            className="group font-condensed text-[11px] text-lime tracking-[0.2em] uppercase flex items-center gap-2 transition-colors duration-200 hover:text-white"
-          >
-            Voir tout
-            <svg
-              width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"
-              className="transition-transform duration-200 group-hover:translate-x-1"
+      {/* ── PROGRAMME PREVIEW ────────────────────────────────────── */}
+      <section className="py-20 md:py-28">
+        {/* Header */}
+        <div className="px-6 md:px-12 mb-12">
+          <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <span className="font-condensed text-xs tracking-[0.3em] text-pink uppercase">À ne pas manquer</span>
+              <h2 className="font-display text-5xl md:text-6xl lg:text-7xl uppercase text-white mt-2">Programme</h2>
+            </div>
+            <Link
+              href="/programme"
+              className="group font-condensed text-xs tracking-[0.2em] text-lime uppercase flex items-center gap-2 hover:text-white transition-colors"
             >
-              <path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5"
-                stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
+              Voir tout le programme
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="transition-transform group-hover:translate-x-1">
+                <path d="M2 7H12M12 7L7.5 2.5M12 7L7.5 11.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
+          </div>
         </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#252525]">
+        {/* Event cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-dark-border/60">
           {events.map((e) => (
             <Link
               key={e.artist}
               href={e.href}
-              className={`relative block overflow-hidden group border-t-2 border-transparent transition-all duration-300 ${e.hoverBorder}`}
+              className="group relative block overflow-hidden"
             >
-              <div className="relative aspect-[3/4] md:aspect-auto md:h-[460px] w-full">
+              <div className="relative aspect-[4/5] md:aspect-[3/4] w-full">
                 <Image
                   src={e.image}
                   alt={e.artist}
                   fill
-                  className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                {/* Overlay — darker on hover */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/90 transition-opacity duration-300" />
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+                
+                {/* Color accent line top */}
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-${e.color} transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500`} />
 
-                {/* Date + time badge */}
-                <div className="absolute top-5 left-5 flex items-center gap-px font-condensed font-bold text-[10px] tracking-[0.15em] uppercase overflow-hidden">
-                  <span className={`${e.dateBg} ${e.dateText} px-2.5 py-1.5`}>{e.date}</span>
-                  <span className={`${e.dateBg} ${e.dateText} px-2.5 py-1.5 opacity-75`}>{e.time}</span>
+                {/* Day badge */}
+                <div className="absolute top-4 left-4">
+                  <span className={`inline-block px-3 py-1.5 bg-${e.color} text-dark font-condensed text-[10px] font-bold tracking-[0.15em] uppercase`}>
+                    {e.date}
+                  </span>
                 </div>
 
-                {/* Artist info — bottom */}
-                <div className="absolute bottom-0 left-0 right-0 px-6 pb-8 translate-y-1 group-hover:translate-y-0 transition-transform duration-300">
-                  <p className="font-display text-[clamp(30px,7vw,42px)] leading-none text-white uppercase">
-                    {e.artist}
+                {/* Time badge */}
+                <div className="absolute top-4 right-4">
+                  <span className="px-3 py-1.5 glass font-condensed text-[10px] tracking-[0.15em] uppercase text-white">
+                    {e.time}
+                  </span>
+                </div>
+
+                {/* Content */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+                  <p className="font-condensed text-xs tracking-[0.2em] text-white/50 uppercase mb-2">
+                    {e.genre} · {e.origin}
                   </p>
-                  <p className="font-condensed text-[11px] tracking-[0.15em] text-white/50 uppercase mt-2">
-                    {e.genre} / {e.origin}
+                  <h3 className="font-display text-4xl md:text-5xl lg:text-6xl uppercase leading-none text-white group-hover:text-lime transition-colors">
+                    {e.artist}
+                  </h3>
+                  <p className="font-condensed text-xs tracking-[0.15em] text-white/40 uppercase mt-3">
+                    {e.day} {e.time}
                   </p>
                 </div>
               </div>
@@ -231,73 +269,78 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── MAP — FATAL FIELDS ────────────────────────────────────── */}
-      <section className="border-b border-[#252525] mt-2">
-        <div className="grid grid-cols-1 md:grid-cols-2">
-          {/* Text block */}
-          <div className="flex flex-col justify-center px-8 py-20 md:px-12 md:py-24 border-b md:border-b-0 md:border-r border-[#252525]">
-            <h2 className="font-display text-[clamp(52px,13vw,88px)] leading-none text-lime uppercase">
-              Fatal Fields
-            </h2>
-            <p className="font-condensed text-white/45 text-xs tracking-[0.3em] uppercase mt-3 mb-6">
-              Explorez le territoire du vide
-            </p>
-            <p className="text-white/55 text-sm leading-relaxed max-w-sm">
-              Un domaine de 50 hectares dans les Ardennes transformé en zone de
-              liberté radicale. 5 scènes, 2 bars thermiques, 1 sanctuaire de glace, 1 station ski, 1 igloo VIP.
-            </p>
-
-            {/* CTA — outline → solid on hover */}
-            <Link
-              href="/carte"
-              className="mt-10 self-start border border-lime text-lime font-condensed font-bold text-xs px-8 py-3.5 tracking-[0.3em] uppercase flex items-center gap-3 transition-all duration-300 hover:bg-lime hover:text-dark group"
-            >
-              <svg
-                width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"
-                className="transition-colors duration-300"
+      {/* ── MAP SECTION ─────────────────────────────────────────────── */}
+      <section className="border-y border-dark-border/60">
+        <div className="grid grid-cols-1 lg:grid-cols-2">
+          {/* Content */}
+          <div className="flex flex-col justify-center px-6 py-16 md:px-12 md:py-24 lg:py-32 order-2 lg:order-1">
+            <div className="max-w-lg">
+              <span className="font-condensed text-xs tracking-[0.3em] text-lime uppercase">Localisation</span>
+              <h2 className="font-display text-6xl md:text-7xl lg:text-8xl uppercase text-white mt-3 mb-4">
+                Fatal Fields
+              </h2>
+              <p className="font-condensed text-sm tracking-[0.2em] text-white/40 uppercase mb-6">
+                Explorez le territoire du vide
+              </p>
+              <p className="text-white/50 text-base leading-relaxed mb-8">
+                Un domaine de 50 hectares dans les Ardennes transformé en zone de
+                liberté radicale. 5 scènes, 2 bars thermiques, 1 sanctuaire de glace, 1 station ski, 1 igloo VIP.
+              </p>
+              <Link
+                href="/carte"
+                className="inline-flex items-center gap-3 border border-lime text-lime font-condensed font-bold text-xs px-6 py-3.5 tracking-[0.25em] uppercase transition-all duration-300 hover:bg-lime hover:text-dark"
               >
-                <path d="M5.5 2L1 4V14L5.5 12M5.5 2L10.5 4M5.5 2V12M10.5 4L15 2V12L10.5 14M10.5 4V14M5.5 12L10.5 14"
-                  stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              Ouvrir la carte interactive
-            </Link>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
+                  <line x1="9" y1="3" x2="9" y2="18" />
+                  <line x1="15" y1="6" x2="15" y2="21" />
+                </svg>
+                Ouvrir la carte
+              </Link>
+            </div>
           </div>
 
           {/* Map image */}
-          <div className="relative h-80 md:h-auto min-h-[380px] overflow-hidden">
+          <div className="relative h-80 lg:h-auto min-h-[400px] order-1 lg:order-2 overflow-hidden">
             <Image
               src="/map_homepage.png"
               alt="Carte Fatal Fields"
               fill
-              className="object-cover object-center transition-transform duration-700 hover:scale-105"
+              className="object-cover transition-transform duration-700 hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent md:bg-gradient-to-l md:from-black/30 md:to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent lg:bg-gradient-to-r lg:from-black/50 lg:to-transparent" />
           </div>
         </div>
       </section>
 
       {/* ── INFOS PRATIQUES ───────────────────────────────────────── */}
-      <section className="border-t-2 border-pink mt-2">
-        <div className="px-8 py-20 pb-28 md:px-12 md:py-24 md:pb-32">
-          <h2 className="font-display text-[clamp(40px,10vw,68px)] leading-none text-white uppercase mb-12">
-            Infos Pratiques
-          </h2>
+      <section className="py-20 md:py-28 px-6 md:px-12">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-12 md:mb-16">
+            <span className="font-condensed text-xs tracking-[0.3em] text-pink uppercase">Guide</span>
+            <h2 className="font-display text-5xl md:text-6xl lg:text-7xl uppercase text-white mt-2">
+              Infos Pratiques
+            </h2>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             {infos.map((info) => (
-              <div key={info.num} className="flex gap-6">
-                {/* Number */}
-                <span className={`font-display text-3xl leading-none pt-0.5 min-w-[2.5rem] ${info.numColor}`}>
-                  {info.num}
-                </span>
-                {/* Content */}
-                <div>
-                  <h3 className="font-condensed font-bold text-sm tracking-[0.2em] text-white uppercase mb-3">
-                    {info.title}
-                  </h3>
-                  <p className="text-white/50 text-sm leading-relaxed">
-                    {info.body}
-                  </p>
+              <div 
+                key={info.num} 
+                className="group glass border border-white/5 rounded-xl p-6 md:p-8 hover:border-lime/10 transition-all duration-300"
+              >
+                <div className="flex gap-5">
+                  <span className={`font-display text-4xl leading-none text-${info.color} opacity-80`}>
+                    {info.num}
+                  </span>
+                  <div>
+                    <h3 className="font-condensed font-bold text-sm tracking-[0.15em] text-white uppercase mb-3">
+                      {info.title}
+                    </h3>
+                    <p className="text-white/50 text-sm leading-relaxed">
+                      {info.body}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
