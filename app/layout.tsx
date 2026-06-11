@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Bebas_Neue, Barlow_Condensed, Space_Grotesk } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
@@ -79,7 +80,9 @@ export default function RootLayout({
       className={`${bebasNeue.variable} ${barlowCondensed.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <head>
-        <script
+        <Script
+          id="pwa-prompt"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.__pwaPrompt = window.__pwaPrompt || null;
