@@ -14,7 +14,7 @@ export default function MainLayout({
       <BottomNav />
       <SideNav />
       
-      <main className="flex-1 pt-14 pb-32 lg:pb-8 lg:pl-64">
+      <main className="flex-1 pt-14 lg:pt-16 pb-32 lg:pb-8 lg:pl-60 xl:pl-64">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 xl:px-12">
           {children}
         </div>
