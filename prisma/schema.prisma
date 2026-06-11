@@ -123,6 +123,8 @@ model PushEventSubscription {
   @@index([pushSubscriptionId])
   @@index([eventSlug])
   @@index([eventStartsAt])
+
+  @@schema("app")
 }
 
 // Rappels envoyés pour les abonnements événements
@@ -136,6 +138,8 @@ model EventSubscriptionReminder {
 
   @@unique([pushEventSubscriptionId]) // Un seul rappel par abonnement
   @@index([pushEventSubscriptionId])
+
+  @@schema("app")
 }
 
 model EventReminder {
@@ -177,6 +181,8 @@ model PushTopic {
   scheduledPushes ScheduledPush[]
 
   @@index([isDefault])
+
+  @@schema("app")
 }
 
 // Table de jointure: abonnements aux topics
@@ -192,23 +198,8 @@ model PushSubscriptionTopic {
 
   @@unique([pushSubscriptionId, topicId])
   @@index([topicId])
-}
-
-enum UserRole {
-  USER
-  ADMIN
 
   @@schema("app")
-
-}
-
-enum ReminderDelay {
-  HOURS_24
-  HOURS_2
-  MINUTES_30
-
-  @@schema("app")
-
 }
 
 // Notifications push programmées à une heure précise
@@ -233,4 +224,24 @@ model ScheduledPush {
   @@index([sentAt])
   @@index([cancelledAt])
   @@index([topicId])
+
+  @@schema("app")
 }
+
+enum UserRole {
+  USER
+  ADMIN
+
+  @@schema("app")
+
+}
+
+enum ReminderDelay {
+  HOURS_24
+  HOURS_2
+  MINUTES_30
+
+  @@schema("app")
+
+}
+
