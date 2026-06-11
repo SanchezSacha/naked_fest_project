@@ -111,10 +111,10 @@ export default function HomePage() {
 
           {/* CTA — lime solid → transparent outline on hover */}
           <Link
-            href="/billetterie"
+            href="/programme"
             className="mt-10 border-2 border-lime bg-lime text-dark font-condensed font-bold text-sm px-14 py-5 tracking-[0.35em] uppercase transition-all duration-300 hover:bg-[#111113] hover:[color:var(--neon-lime)]"
           >
-            Billetterie
+            Programme
           </Link>
         </div>
 
