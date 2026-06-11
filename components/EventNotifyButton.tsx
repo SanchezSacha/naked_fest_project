@@ -151,7 +151,7 @@ export default function EventNotifyButton({ eventId, eventTitle, eventStartsAt }
         disabled={loading}
         className={`flex items-center gap-2 px-3 py-2 rounded-lg font-condensed text-[10px] font-bold uppercase tracking-[0.15em] transition-all duration-200 ${
           subscribed
-            ? "bg-lime border border-lime text-dark shadow-[0_0_16px_rgba(163,230,53,0.35)]"
+            ? "bg-lime/10 border border-lime text-lime shadow-[0_0_16px_rgba(200,255,0,0.2)]"
             : "bg-white/5 border border-white/20 text-white/70 hover:border-lime hover:text-lime"
         } ${loading ? "opacity-50 cursor-wait" : ""}`}
         title={subscribed ? "Désactiver les notifications" : "Recevoir une notification 30min avant"}
