@@ -49,7 +49,7 @@ export default function ForgotPasswordPage() {
           id="email"
           name="email"
           label="Email"
-          placeholder="maya@nfest.fr"
+          placeholder="john.doe@example.com"
           type="email"
           autoComplete="email"
         />

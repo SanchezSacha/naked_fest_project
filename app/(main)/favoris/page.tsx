@@ -1,16 +1,16 @@
 import { fallbackFestivalEvents } from "@/lib/festival-events";
 import { fetchStrapiEvents } from "@/lib/strapi";
-import MapClient from "./MapClient";
+import FavoritesClient from "./FavoritesClient";
 
-export default async function CartePage() {
+export default async function FavoritesPage() {
   let events = fallbackFestivalEvents;
 
   try {
     const strapiEvents = await fetchStrapiEvents();
     if (strapiEvents.length > 0) events = strapiEvents;
   } catch {
-    // The map remains usable while Strapi is unavailable.
+    // Favorites remain available offline with local event data.
   }
 
-  return <MapClient events={events} />;
+  return <FavoritesClient events={events} />;
 }

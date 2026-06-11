@@ -50,7 +50,7 @@ export default function ResetPasswordClient() {
           id="password"
           name="password"
           label="Mot de passe"
-          placeholder="ex: Glacier2027!"
+          placeholder="8 caracteres minimum"
           type="password"
           autoComplete="new-password"
         />
@@ -58,7 +58,7 @@ export default function ResetPasswordClient() {
           id="passwordConfirmation"
           name="passwordConfirmation"
           label="Confirmer le mot de passe"
-          placeholder="retapez Glacier2027!"
+          placeholder="Confirmez votre mot de passe"
           type="password"
           autoComplete="new-password"
         />

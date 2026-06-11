@@ -49,10 +49,10 @@ export default function manifest(): MetadataRoute.Manifest {
         ],
       },
       {
-        name: "Billetterie",
-        short_name: "Billets",
-        description: "Acheter des billets",
-        url: "/billetterie",
+        name: "Mes favoris",
+        short_name: "Favoris",
+        description: "Voir mes evenements favoris",
+        url: "/favoris",
         icons: [
           {
             src: "/icon-96.png",
