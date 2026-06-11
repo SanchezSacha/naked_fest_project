@@ -45,7 +45,7 @@ export default function HeaderAuthActions() {
         <button
           type="button"
           onClick={() => signOut({ redirectTo: "/login" })}
-          className="border border-pink px-4 py-3 font-condensed text-[10px] font-bold uppercase tracking-[0.2em] text-pink transition-all duration-300 hover:bg-pink hover:text-white hover:shadow-[0_0_18px_rgba(255,45,155,0.24)]"
+          className="border border-pink bg-pink px-4 py-3 font-condensed text-[10px] font-bold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-transparent hover:[color:var(--neon-pink)] hover:shadow-[0_0_18px_rgba(255,45,155,0.24)]"
         >
           Deconnexion
         </button>
