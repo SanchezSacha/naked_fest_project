@@ -1,4 +1,3 @@
-import { fallbackFestivalEvents } from "@/lib/festival-events";
 import { fetchStrapiEvents } from "@/lib/strapi";
 import { NextResponse } from "next/server";
 
@@ -14,14 +13,11 @@ export async function GET(
     if (event) {
       return NextResponse.json({ data: event, source: "strapi" });
     }
-  } catch {
-    // Continue with fallback data.
-  }
-
-  const event = fallbackFestivalEvents.find((item) => item.id === eventId);
-  if (!event) {
     return NextResponse.json({ error: "Evenement introuvable" }, { status: 404 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Strapi indisponible" },
+      { status: 503 },
+    );
   }
-
-  return NextResponse.json({ data: event, source: "fallback" });
 }

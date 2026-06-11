@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { fetchStrapiEvents } from "@/lib/strapi";
 import { ReminderDelay } from "@/app/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -25,7 +26,8 @@ export async function POST(req: NextRequest) {
 
   const { eventId, delay, endpoint } = parsed.data;
 
-  const event = await prisma.event.findUnique({ where: { id: eventId } });
+  const events = await fetchStrapiEvents();
+  const event = events.find((item) => item.strapiId === eventId);
   if (!event) {
     return NextResponse.json({ error: "Evenement introuvable" }, { status: 404 });
   }
@@ -41,7 +43,7 @@ export async function POST(req: NextRequest) {
   }
 
   const remindAt = new Date(
-    event.startsAt.getTime() - REMINDER_OFFSET_MINUTES[delay] * 60_000,
+    new Date(event.startsAt).getTime() - REMINDER_OFFSET_MINUTES[delay] * 60_000,
   );
 
   const session = await auth();

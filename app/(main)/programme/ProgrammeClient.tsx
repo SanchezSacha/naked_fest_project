@@ -23,10 +23,8 @@ const categoryLabels: Record<FestivalEvent["category"], string> = {
 
 export default function ProgrammeClient({
   initialEvents,
-  source,
 }: {
   initialEvents: FestivalEvent[];
-  source: "strapi" | "fallback";
 }) {
   const [activeDay, setActiveDay] = useState<DayId>("SAM");
   const [showFilters, setShowFilters] = useState(false);
@@ -143,7 +141,7 @@ export default function ProgrammeClient({
                 {filteredEvents.length} événement{filteredEvents.length > 1 ? "s" : ""}
               </span>
               <span className="hidden sm:inline-block px-2 py-1 rounded border border-white/10 font-condensed text-[10px] uppercase tracking-[0.15em] text-white/30">
-                {source === "strapi" ? "Strapi" : "Demo"}
+                Strapi
               </span>
             </div>
           </div>

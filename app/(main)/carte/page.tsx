@@ -1,16 +1,7 @@
-import { fallbackFestivalEvents } from "@/lib/festival-events";
 import { fetchStrapiEvents } from "@/lib/strapi";
 import MapClient from "./MapClient";
 
 export default async function CartePage() {
-  let events = fallbackFestivalEvents;
-
-  try {
-    const strapiEvents = await fetchStrapiEvents();
-    if (strapiEvents.length > 0) events = strapiEvents;
-  } catch {
-    // The map remains usable while Strapi is unavailable.
-  }
-
+  const events = await fetchStrapiEvents();
   return <MapClient events={events} />;
 }
