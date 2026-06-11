@@ -77,8 +77,22 @@ export default function HomePage() {
             <span className="block text-[clamp(60px,18vw,140px)] text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
               Naked Fest
             </span>
-            <span className="block text-[clamp(36px,11vw,80px)] text-gradient mt-2">
-              Winter 27
+            <span className="relative block text-[clamp(36px,11vw,80px)] mt-2 font-display uppercase leading-none">
+              <span
+                className="absolute inset-0 text-pink select-none"
+                aria-hidden="true"
+                style={{ transform: "translate(-4px, -4px)" }}
+              >
+                Winter 27
+              </span>
+              <span
+                className="absolute inset-0 text-lime select-none"
+                aria-hidden="true"
+                style={{ transform: "translate(4px, 4px)" }}
+              >
+                Winter 27
+              </span>
+              <span className="relative text-white">Winter 27</span>
             </span>
           </h1>
 
