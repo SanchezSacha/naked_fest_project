@@ -68,7 +68,16 @@ const infos = [
 
 /* ─── PAGE ──────────────────────────────────────────────────────── */
 
-export default function HomePage() {
+const textColors = {
+  lime: "text-lime",
+  pink: "text-pink",
+  cyan: "text-cyan",
+  violet: "text-violet",
+};
+
+export default async function HomePage() {
+  const home = await fetchStrapiHomePage();
+
   return (
     <>
       <section className="relative -mt-14 flex min-h-screen flex-col items-center justify-center overflow-hidden lg:-mt-16">
@@ -208,7 +217,7 @@ export default function HomePage() {
 
         {/* Event cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-dark-border/60">
-          {events.map((e) => (
+          {home.featuredEvents.map((event) => (
             <Link
               key={event.id}
               href={`/programme/${event.id}`}
@@ -277,8 +286,8 @@ export default function HomePage() {
           </div>
           <div className="relative order-1 h-80 min-h-[400px] overflow-hidden lg:order-2 lg:h-auto">
             <Image
-              src="/map_homepage.png"
-              alt="Carte Fatal Fields"
+              src={home.mapImage}
+              alt={`Carte ${home.mapTitle}`}
               fill
               className="object-cover transition-transform duration-700 hover:scale-105"
             />
