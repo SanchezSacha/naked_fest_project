@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
+import Button from "@/components/Button";
 
 export default function HeaderAuthActions() {
   const { data: session, status } = useSession();
@@ -21,23 +22,16 @@ export default function HeaderAuthActions() {
         <span className="hidden max-w-36 truncate font-condensed text-[11px] font-bold uppercase tracking-[0.16em] text-white/70 sm:inline">
           {userName}
         </span>
-        <button
-          type="button"
-          onClick={() => signOut({ redirectTo: "/login" })}
-          className="border border-pink bg-pink px-4 py-3 font-condensed text-[10px] font-bold uppercase tracking-[0.2em] text-white transition-all duration-300 hover:bg-transparent hover:[color:var(--neon-pink)] hover:shadow-[0_0_18px_rgba(255,45,155,0.24)]"
-        >
+        <Button onClick={() => signOut({ redirectTo: "/login" })} color="pink" variant="filled" size="sm">
           Deconnexion
-        </button>
+        </Button>
       </div>
     );
   }
 
   return (
-    <Link
-      href="/login"
-      className="border border-lime bg-lime px-6 py-3 font-condensed text-[10px] font-bold uppercase tracking-[0.25em] text-dark transition-all duration-300 hover:bg-[#111113] hover:[color:var(--neon-lime)] hover:shadow-[0_0_18px_rgba(200,255,0,0.25)]"
-    >
+    <Button as="link" href="/login" color="lime" variant="filled" size="sm">
       Connexion
-    </Link>
+    </Button>
   );
 }

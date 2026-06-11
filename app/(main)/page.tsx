@@ -129,7 +129,7 @@ export default async function HomePage() {
               as="link"
               href="/programme"
               color="lime"
-              variant="solid-dark"
+              variant="filled"
               size="lg"
               className="gap-3"
             >
@@ -144,8 +144,8 @@ export default async function HomePage() {
             <Button
               as="link"
               href="/carte"
-              color="white"
-              variant="outline"
+              color="cyan"
+              variant="filled"
               size="lg"
               className="gap-3"
             >

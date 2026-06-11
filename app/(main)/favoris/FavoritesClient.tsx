@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import Button from "@/components/Button";
 import FavoriteButton from "@/components/FavoriteButton";
 import type { FestivalEvent } from "@/lib/festival-events";
 import { FAVORITES_CHANGED_EVENT, getFavoriteIds } from "@/lib/favorites";
@@ -48,12 +49,9 @@ export default function FavoritesClient({ events }: { events: FestivalEvent[] })
         <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-white/50">
           Connectez-vous ou creez un compte pour enregistrer des favoris sur cet appareil.
         </p>
-        <Link
-          href="/login"
-          className="mt-8 inline-flex border-2 border-lime bg-lime px-8 py-4 font-condensed text-xs font-bold uppercase tracking-[0.2em] text-dark"
-        >
+        <Button as="link" href="/login" color="lime" variant="filled" size="md" className="mt-8">
           Se connecter
-        </Link>
+        </Button>
       </section>
     );
   }

@@ -124,13 +124,9 @@ function DeleteModal({
             <Button onClick={onClose} color="white" variant="subtle" size="sm" className="flex-1">
               Annuler
             </Button>
-            <button
-              type="submit"
-              disabled={isPending}
-              className="flex-1 border-2 border-pink bg-pink px-4 py-3 font-condensed text-xs font-bold uppercase tracking-[0.18em] text-white transition-all duration-300 hover:bg-transparent hover:[color:var(--neon-pink)] hover:shadow-[0_0_18px_rgba(255,45,155,0.24)] disabled:opacity-50"
-            >
+            <Button type="submit" color="pink" variant="filled" size="sm" disabled={isPending} className="flex-1">
               {isPending ? "Suppression..." : "Supprimer definitivement"}
-            </button>
+            </Button>
           </div>
         </form>
       </div>
@@ -422,13 +418,15 @@ export default function AccountPage() {
             <p className="mt-3 max-w-xl text-sm leading-7 text-white/45">
               La suppression du compte est definitive et irreversible. Toutes tes donnees seront effacees.
             </p>
-            <button
-              type="button"
+            <Button
               onClick={() => { setShowDeleteModal(true); setDeleteError(null); }}
-              className="mt-6 border border-pink bg-pink px-5 py-3 font-condensed text-xs font-bold uppercase tracking-[0.18em] text-white transition-all duration-300 hover:bg-transparent hover:[color:var(--neon-pink)] hover:shadow-[0_0_18px_rgba(255,45,155,0.24)]"
+              color="pink"
+              variant="filled"
+              size="sm"
+              className="mt-6"
             >
               Supprimer le compte
-            </button>
+            </Button>
           </section>
         </>
       ) : (
@@ -438,12 +436,9 @@ export default function AccountPage() {
           <p className="mt-4 font-condensed text-sm uppercase tracking-[0.2em] text-white/35">
             Connecte-toi pour acceder a ton espace personnel
           </p>
-          <Link
-            href="/login"
-            className="mt-10 inline-flex border-2 border-lime bg-lime px-8 py-4 font-condensed text-xs font-bold uppercase tracking-[0.22em] text-dark transition-all duration-300 hover:bg-[#111113] hover:[color:var(--neon-lime)] hover:shadow-[0_0_18px_rgba(200,255,0,0.25)]"
-          >
+          <Button as="link" href="/login" color="lime" variant="filled" size="md" className="mt-10">
             Connexion
-          </Link>
+          </Button>
         </section>
       )}
 

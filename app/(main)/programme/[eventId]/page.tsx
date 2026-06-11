@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Button from "@/components/Button";
 import FavoriteButton from "@/components/FavoriteButton";
 import { fetchStrapiEvents } from "@/lib/strapi";
 
@@ -117,12 +118,16 @@ export default async function EventDetailPage({
             />
           </dl>
 
-          <Link
+          <Button
+            as="link"
             href={`/carte?event=${event.id}`}
-            className="mt-10 inline-flex border-2 border-lime bg-lime px-7 py-4 font-condensed text-xs font-bold uppercase tracking-[0.22em] text-dark transition-all hover:bg-[#111113] hover:[color:var(--neon-lime)]"
+            color="lime"
+            variant="filled"
+            size="md"
+            className="mt-10"
           >
             Voir sur la carte
-          </Link>
+          </Button>
         </aside>
       </section>
     </>

@@ -2,6 +2,7 @@
 
 import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
+import Button from "@/components/Button";
 import PushSubscriptionToggle from "@/components/PushSubscriptionToggle";
 
 type SessionResponse = {
@@ -36,13 +37,15 @@ export default function ProgrammeUserBar() {
         </p>
         <div className="flex flex-col gap-3 md:flex-row md:items-center">
           <PushSubscriptionToggle />
-          <button
-            type="button"
+          <Button
             onClick={() => signOut({ redirectTo: "/login" })}
-            className="self-start border border-pink px-6 py-3 font-condensed text-xs font-bold uppercase tracking-[0.25em] text-pink transition-all duration-300 hover:bg-pink hover:text-white hover:shadow-[0_0_18px_rgba(255,45,155,0.24)] md:self-auto"
+            color="pink"
+            variant="filled"
+            size="sm"
+            className="self-start md:self-auto"
           >
             Deconnexion
-          </button>
+          </Button>
         </div>
       </div>
     </section>

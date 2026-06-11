@@ -4,7 +4,7 @@ import Link from "next/link";
 import { type ReactNode } from "react";
 
 type ButtonColor = "lime" | "pink" | "cyan" | "violet" | "white";
-type ButtonVariant = "solid" | "solid-dark" | "outline" | "outline-inverse" | "ghost" | "subtle";
+type ButtonVariant = "solid" | "solid-dark" | "outline" | "outline-inverse" | "ghost" | "subtle" | "filled";
 type ButtonSize = "sm" | "md" | "lg";
 
 type BaseProps = {
@@ -81,6 +81,14 @@ const subtleMap: Record<ButtonColor, string> = {
   white:  "bg-white/[0.03] text-white border border-white/20 hover:border-white/40 hover:bg-white/[0.06]",
 };
 
+const filledMap: Record<ButtonColor, string> = {
+  lime:   "bg-lime text-dark border border-lime hover:bg-dark hover:text-white hover:shadow-[0_0_18px_rgba(200,255,0,0.25)]",
+  pink:   "bg-pink text-dark border border-pink hover:bg-dark hover:text-white hover:shadow-[0_0_18px_rgba(255,45,155,0.25)]",
+  cyan:   "bg-cyan text-dark border border-cyan hover:bg-dark hover:text-white hover:shadow-[0_0_18px_rgba(0,245,255,0.25)]",
+  violet: "bg-violet text-dark border border-violet hover:bg-dark hover:text-white hover:shadow-[0_0_18px_rgba(191,95,255,0.25)]",
+  white:  "bg-white text-dark border border-white hover:bg-dark hover:text-white hover:shadow-[0_0_18px_rgba(255,255,255,0.12)]",
+};
+
 function variantClasses(variant: ButtonVariant, color: ButtonColor): string {
   switch (variant) {
     case "solid":         return solidMap[color];
@@ -89,6 +97,7 @@ function variantClasses(variant: ButtonVariant, color: ButtonColor): string {
     case "outline-inverse": return outlineInverseMap[color];
     case "ghost":         return ghostMap[color];
     case "subtle":        return subtleMap[color];
+    case "filled":        return filledMap[color];
     default:              return "";
   }
 }
