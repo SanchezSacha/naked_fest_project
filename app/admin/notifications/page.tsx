@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getPushConfigStatus } from "@/lib/push";
 import AdminPushForm from "@/components/AdminPushForm";
+import AdminTopicManager from "@/components/AdminTopicManager";
 
 export const metadata = {
   title: "Admin · Notifications",
@@ -55,7 +56,15 @@ export default async function AdminNotificationsPage() {
         </div>
       )}
 
-      {pushStatus.isFullyConfigured && <AdminPushForm />}
+      {pushStatus.isFullyConfigured && (
+        <>
+          <div className="mb-12">
+            <AdminTopicManager />
+          </div>
+          <hr className="mb-12 border-white/10" />
+          <AdminPushForm />
+        </>
+      )}
     </main>
   );
 }

@@ -1,6 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+type PushTopic = {
+  id: number;
+  key: string;
+  label: string;
+  color: string | null;
+};
 
 type SendResult = {
   recipients: number;
@@ -13,9 +20,30 @@ export default function AdminPushForm() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [url, setUrl] = useState("/");
+  const [topicKey, setTopicKey] = useState<string>("");
+  const [topics, setTopics] = useState<PushTopic[]>([]);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<SendResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      await Promise.resolve();
+      try {
+        const res = await fetch("/api/push/topics");
+        if (!cancelled && res.ok) {
+          const data = await res.json();
+          setTopics(data);
+        }
+      } catch {
+        // ignore
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -27,7 +55,12 @@ export default function AdminPushForm() {
       const res = await fetch("/api/push/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, body, url: url || "/" }),
+        body: JSON.stringify({
+          title,
+          body,
+          url: url || "/",
+          topicKey: topicKey || undefined,
+        }),
       });
 
       const data = (await res.json().catch(() => null)) as
@@ -100,12 +133,42 @@ export default function AdminPushForm() {
         />
       </div>
 
+      {topics.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <label htmlFor="push-topic" className={labelClass}>
+            Source de notification (optionnel)
+          </label>
+          <select
+            id="push-topic"
+            value={topicKey}
+            onChange={(e) => setTopicKey(e.target.value)}
+            className={`${fieldClass} cursor-pointer`}
+          >
+            <option value="">Tous les abonnes</option>
+            {topics.map((topic) => (
+              <option key={topic.key} value={topic.key}>
+                {topic.label}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-white/40">
+            Choisissez une source pour notifier uniquement les abonnes de cette categorie
+          </p>
+        </div>
+      )}
+
       <button
         type="submit"
         disabled={busy}
         className="self-start bg-lime px-10 py-4 font-condensed text-xs font-bold uppercase tracking-[0.3em] text-dark transition-all duration-300 hover:opacity-80 disabled:opacity-50"
       >
-        {busy ? "Envoi..." : "Envoyer a tous les abonnes"}
+        {busy
+          ? "Envoi..."
+          : topicKey
+            ? `Envoyer aux abonnes de "${
+                topics.find((t) => t.key === topicKey)?.label || topicKey
+              }"`
+            : "Envoyer a tous les abonnes"}
       </button>
 
       {result && (

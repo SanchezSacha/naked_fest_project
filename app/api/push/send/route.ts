@@ -8,6 +8,7 @@ const sendSchema = z.object({
   title: z.string().min(1).max(120),
   body: z.string().min(1).max(500),
   url: z.string().min(1).max(500).optional(),
+  topicKey: z.string().optional(), // null = tous les abonnes, sinon filtre par topic
 });
 
 // Envoi manuel par un administrateur : titre, contenu et lien au choix.
@@ -29,11 +30,39 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Donnees invalides" }, { status: 400 });
   }
 
-  const { title, body, url } = parsed.data;
+  const { title, body, url, topicKey } = parsed.data;
 
-  const subscriptions = await prisma.pushSubscription.findMany({
-    select: { endpoint: true, p256dh: true, auth: true },
-  });
+  // Si un topic est specifie, on filtre les abonnements a ce topic
+  // Sinon, on envoie a tous les abonnes (retrocompatibilite)
+  let subscriptions;
+
+  if (topicKey) {
+    // Verifier que le topic existe
+    const topic = await prisma.pushTopic.findUnique({
+      where: { key: topicKey },
+    });
+
+    if (!topic) {
+      return NextResponse.json({ error: "Topic inconnu" }, { status: 404 });
+    }
+
+    // Recuperer les abonnements associes a ce topic
+    const subTopics = await prisma.pushSubscriptionTopic.findMany({
+      where: { topicId: topic.id },
+      include: {
+        pushSubscription: {
+          select: { endpoint: true, p256dh: true, auth: true },
+        },
+      },
+    });
+
+    subscriptions = subTopics.map((st) => st.pushSubscription);
+  } else {
+    // Sans topic : envoi a tous les abonnes
+    subscriptions = await prisma.pushSubscription.findMany({
+      select: { endpoint: true, p256dh: true, auth: true },
+    });
+  }
 
   if (subscriptions.length === 0) {
     return NextResponse.json({ sent: 0, failed: 0, recipients: 0 });

@@ -7,11 +7,13 @@ import {
   subscribeToPush,
   unsubscribeFromPush,
 } from "@/lib/push-client";
+import PushTopicSelector from "./PushTopicSelector";
 
 type Status = "loading" | "unsupported" | "denied" | "off" | "on";
 
 export default function PushSubscriptionToggle() {
   const [status, setStatus] = useState<Status>("loading");
+  const [endpoint, setEndpoint] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,8 +34,12 @@ export default function PushSubscriptionToggle() {
         setStatus("unsupported");
       } else if (Notification.permission === "denied") {
         setStatus("denied");
+      } else if (sub) {
+        setStatus("on");
+        setEndpoint(sub.endpoint);
       } else {
-        setStatus(sub ? "on" : "off");
+        setStatus("off");
+        setEndpoint(null);
       }
     })();
 
@@ -66,6 +72,7 @@ export default function PushSubscriptionToggle() {
     try {
       await unsubscribeFromPush();
       setStatus("off");
+      setEndpoint(null);
     } catch {
       setError("Echec de la desactivation");
     } finally {
@@ -100,14 +107,17 @@ export default function PushSubscriptionToggle() {
       )}
 
       {status === "on" && (
-        <button
-          type="button"
-          onClick={handleDisable}
-          disabled={busy}
-          className={`${baseBtn} border-pink text-pink hover:bg-pink hover:text-white hover:shadow-[0_0_18px_rgba(255,45,155,0.24)]`}
-        >
-          {busy ? "..." : "Desactiver les notifications"}
-        </button>
+        <>
+          <button
+            type="button"
+            onClick={handleDisable}
+            disabled={busy}
+            className={`${baseBtn} border-pink text-pink hover:bg-pink hover:text-white hover:shadow-[0_0_18px_rgba(255,45,155,0.24)]`}
+          >
+            {busy ? "..." : "Desactiver les notifications"}
+          </button>
+          {endpoint && <PushTopicSelector endpoint={endpoint} />}
+        </>
       )}
 
       {error && (

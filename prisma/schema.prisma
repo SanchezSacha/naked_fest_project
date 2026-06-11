@@ -281,6 +281,7 @@ model PushSubscription {
 
   user      User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   reminders EventReminder[]
+  topics    PushSubscriptionTopic[]
 
   @@index([userId])
 }
@@ -305,6 +306,37 @@ model EventReminder {
   @@index([userId])
   @@index([pushSubscriptionId])
   @@index([remindAt])
+}
+
+// Topics/Sources de notification (ex: General, Urgent, Programme, Benevoles)
+model PushTopic {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique // slug technique: "general", "urgent", "programme"
+  label       String   // affichage: "Général", "Urgent", "Programme"
+  description String?
+  color       String?  // couleur hex pour l'UI: "#ff2d9b"
+  isDefault   Boolean  @default(false) // abonnement automatique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  subscriptions PushSubscriptionTopic[]
+
+  @@index([isDefault])
+}
+
+// Table de jointure: abonnements aux topics
+model PushSubscriptionTopic {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  pushSubscriptionId Int
+  topicId            Int
+
+  pushSubscription PushSubscription @relation(fields: [pushSubscriptionId], references: [id], onDelete: Cascade)
+  topic            PushTopic       @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@unique([pushSubscriptionId, topicId])
+  @@index([topicId])
 }
 
 enum UserRole {
