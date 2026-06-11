@@ -77,9 +77,12 @@ export default function ProgrammeClient({
       <ProgrammeUserBar />
 
       {/* ── DAY SELECTOR ───────────────────────────────────────────── */}
-      <section className="sticky top-14 lg:top-16 z-40 border-b border-dark-border/60 glass">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex">
+      <section className="sticky top-14 lg:top-16 z-40 border-b border-dark-border/60 bg-dark/80 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="flex items-center gap-2 py-3 overflow-x-auto">
+            <span className="font-condensed text-xs tracking-[0.15em] text-white/40 uppercase mr-4 hidden sm:inline">
+              Jour
+            </span>
             {days.map((day) => {
               const active = day.id === activeDay;
               return (
@@ -87,23 +90,14 @@ export default function ProgrammeClient({
                   key={day.id}
                   type="button"
                   onClick={() => setActiveDay(day.id)}
-                  className={`flex-1 flex flex-col items-center gap-1.5 px-4 py-5 md:py-6 transition-all duration-300 relative ${
-                    active ? "text-white" : "text-white/40 hover:text-white/70"
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-condensed text-xs tracking-[0.1em] uppercase transition-all duration-200 whitespace-nowrap ${
+                    active 
+                      ? `bg-${day.color}/10 border border-${day.color}/30 text-${day.color}` 
+                      : "border border-white/10 text-white/50 hover:border-white/20 hover:text-white/70"
                   }`}
                 >
-                  {/* Active indicator */}
-                  {active && (
-                    <span className={`absolute bottom-0 left-4 right-4 h-0.5 bg-${day.color}`} />
-                  )}
-                  <span className={`font-display text-4xl md:text-5xl ${active ? `text-${day.color}` : ""}`}>
-                    {day.date}
-                  </span>
-                  <span className="font-condensed text-xs tracking-[0.2em] uppercase">
-                    {day.label}
-                  </span>
-                  <span className="font-condensed text-[10px] tracking-[0.15em] uppercase opacity-50">
-                    {day.sub}
-                  </span>
+                  <span className="w-2 h-2 rounded-full bg-current" />
+                  {day.label} {day.date}
                 </button>
               );
             })}

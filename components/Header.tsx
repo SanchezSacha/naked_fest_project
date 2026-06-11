@@ -17,24 +17,6 @@ export default function Header() {
             <span className="absolute inset-0 blur-lg bg-lime/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-0" />
           </Link>
           
-          {/* Desktop Navigation avec indicateurs actifs */}
-          <nav className="hidden lg:flex items-center gap-1">
-            {[
-              { href: "/programme", label: "Programme" },
-              { href: "/carte", label: "Carte" },
-              { href: "/favoris", label: "Favoris" },
-            ].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="relative px-4 py-2 font-condensed text-sm uppercase tracking-[0.12em] text-white/70 hover:text-white transition-all duration-200 rounded-lg hover:bg-white/5 group"
-              >
-                <span className="relative z-10">{item.label}</span>
-                <span className="absolute bottom-1 left-4 right-4 h-px bg-lime scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </Link>
-            ))}
-          </nav>
-          
           {/* Actions avec meilleurs boutons */}
           <div className="flex items-center gap-2 lg:gap-3">
             <Link

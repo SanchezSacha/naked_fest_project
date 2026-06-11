@@ -127,29 +127,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── QUICK NAV ─────────────────────────────────────────────── */}
-      <section className="border-b border-dark-border/60">
-        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-dark-border/60">
-          {[
-            { href: "/programme", label: "Programme", icon: "📅" },
-            { href: "/carte", label: "Carte", icon: "🗺️" },
-            { href: "/favoris", label: "Favoris", icon: "⭐" },
-            { href: "/compte", label: "Compte", icon: "👤" },
-          ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="group flex flex-col items-center gap-2 py-6 px-4 hover:bg-white/[0.02] transition-colors"
-            >
-              <span className="text-xl">{item.icon}</span>
-              <span className="font-condensed text-xs tracking-[0.15em] uppercase text-white/60 group-hover:text-lime transition-colors">
-                {item.label}
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       {/* ── FEATURES ──────────────────────────────────────────────── */}
       <section className="px-6 py-20 md:px-12 md:py-28">
         <div className="max-w-6xl mx-auto">
