@@ -240,24 +240,66 @@ export default function AdminScheduledManager() {
                 className="mt-1 w-full border border-white/20 bg-black/30 px-3 py-2 text-white"
               />
             </div>
-            <div>
-              <label className="block font-condensed text-sm uppercase tracking-[0.1em] text-white/70">
-                Source (optionnel)
+            <div className="md:col-span-2">
+              <label className="block font-condensed text-sm uppercase tracking-[0.1em] text-white/70 mb-2">
+                Motif / Source (optionnel)
               </label>
-              <select
-                value={formData.topicKey}
-                onChange={(e) =>
-                  setFormData({ ...formData, topicKey: e.target.value })
-                }
-                className="mt-1 w-full border border-white/20 bg-black/30 px-3 py-2 text-white"
-              >
-                <option value="">Tous les abonnés</option>
-                {topics.map((topic) => (
-                  <option key={topic.key} value={topic.key}>
-                    {topic.label}
-                  </option>
-                ))}
-              </select>
+              <div className="flex flex-col gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, topicKey: "" })}
+                  className={`flex items-center gap-3 px-4 py-3 border transition-all duration-200 text-left ${
+                    formData.topicKey === ""
+                      ? "border-lime/40 bg-lime/10"
+                      : "border-white/10 bg-white/[0.03] hover:border-white/20"
+                  }`}
+                >
+                  <span className="shrink-0 w-2.5 h-2.5 rounded-full bg-white/30" />
+                  <span className="flex-1 font-condensed text-xs font-bold uppercase tracking-[0.15em] text-white/70">
+                    Tous les abonnés
+                  </span>
+                  <span className={`shrink-0 w-4 h-4 border flex items-center justify-center transition-all ${formData.topicKey === "" ? "border-lime bg-lime" : "border-white/20 bg-transparent"}`}>
+                    {formData.topicKey === "" && (
+                      <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                        <path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </span>
+                </button>
+                {topics.map((topic) => {
+                  const active = formData.topicKey === topic.key;
+                  const dotColor = topic.color ?? "#a3e635";
+                  return (
+                    <button
+                      key={topic.key}
+                      type="button"
+                      onClick={() =>
+                        setFormData({ ...formData, topicKey: active ? "" : topic.key })
+                      }
+                      className={`flex items-center gap-3 px-4 py-3 border transition-all duration-200 text-left ${
+                        active
+                          ? "border-lime/40 bg-lime/10"
+                          : "border-white/10 bg-white/[0.03] hover:border-white/20"
+                      }`}
+                    >
+                      <span
+                        className="shrink-0 w-2.5 h-2.5 rounded-full"
+                        style={{ backgroundColor: dotColor }}
+                      />
+                      <span className="flex-1 font-condensed text-xs font-bold uppercase tracking-[0.15em] text-white/70">
+                        {topic.label}
+                      </span>
+                      <span className={`shrink-0 w-4 h-4 border flex items-center justify-center transition-all ${active ? "border-lime bg-lime" : "border-white/20 bg-transparent"}`}>
+                        {active && (
+                          <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                            <path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        )}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
             <div>
               <label className="block font-condensed text-sm uppercase tracking-[0.1em] text-white/70">

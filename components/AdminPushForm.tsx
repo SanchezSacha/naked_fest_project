@@ -135,25 +135,66 @@ export default function AdminPushForm() {
 
       {topics.length > 0 && (
         <div className="flex flex-col gap-2">
-          <label htmlFor="push-topic" className={labelClass}>
-            Source de notification (optionnel)
-          </label>
-          <select
-            id="push-topic"
-            value={topicKey}
-            onChange={(e) => setTopicKey(e.target.value)}
-            className={`${fieldClass} cursor-pointer`}
-          >
-            <option value="">Tous les abonnes</option>
-            {topics.map((topic) => (
-              <option key={topic.key} value={topic.key}>
-                {topic.label}
-              </option>
-            ))}
-          </select>
-          <p className="text-xs text-white/40">
-            Choisissez une source pour notifier uniquement les abonnes de cette categorie
+          <span className={labelClass}>Motif / Source (optionnel)</span>
+          <p className="text-xs text-white/40 -mt-1">
+            Laissez vide pour notifier tous les abonnés, ou choisissez un motif ciblé.
           </p>
+          <div className="flex flex-col gap-1.5 mt-1">
+            {/* Option "Tous" */}
+            <button
+              type="button"
+              onClick={() => setTopicKey("")}
+              className={`flex items-center gap-3 px-4 py-3 border transition-all duration-200 text-left ${
+                topicKey === ""
+                  ? "border-lime/40 bg-lime/10"
+                  : "border-white/10 bg-white/[0.03] hover:border-white/20"
+              }`}
+            >
+              <span className="shrink-0 w-2.5 h-2.5 rounded-full bg-white/30" />
+              <span className="flex-1 font-condensed text-xs font-bold uppercase tracking-[0.15em] text-white/70">
+                Tous les abonnés
+              </span>
+              <span className={`shrink-0 w-4 h-4 border flex items-center justify-center transition-all ${topicKey === "" ? "border-lime bg-lime" : "border-white/20 bg-transparent"}`}>
+                {topicKey === "" && (
+                  <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                    <path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </span>
+            </button>
+
+            {topics.map((topic) => {
+              const active = topicKey === topic.key;
+              const dotColor = topic.color ?? "#a3e635";
+              return (
+                <button
+                  key={topic.key}
+                  type="button"
+                  onClick={() => setTopicKey(active ? "" : topic.key)}
+                  className={`flex items-center gap-3 px-4 py-3 border transition-all duration-200 text-left ${
+                    active
+                      ? "border-lime/40 bg-lime/10"
+                      : "border-white/10 bg-white/[0.03] hover:border-white/20"
+                  }`}
+                >
+                  <span
+                    className="shrink-0 w-2.5 h-2.5 rounded-full"
+                    style={{ backgroundColor: dotColor }}
+                  />
+                  <span className="flex-1 font-condensed text-xs font-bold uppercase tracking-[0.15em] text-white/70">
+                    {topic.label}
+                  </span>
+                  <span className={`shrink-0 w-4 h-4 border flex items-center justify-center transition-all ${active ? "border-lime bg-lime" : "border-white/20 bg-transparent"}`}>
+                    {active && (
+                      <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                        <path d="M1.5 4.5L3.5 6.5L7.5 2.5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
 
