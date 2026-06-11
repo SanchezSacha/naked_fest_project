@@ -35,7 +35,7 @@ export default function Login() {
 
   return (
     <AuthPage title="Connexion" subtitle="Retour au chaud, soldat du froid">
-      <form action={login} className="space-y-9">
+      <form action={login} className="space-y-9 md:space-y-5">
         <AuthFormField
           id="email"
           name="email"
@@ -57,7 +57,7 @@ export default function Login() {
         <div className="text-right">
           <Link
             href="/forgot-password"
-            className="font-condensed text-lg font-bold uppercase tracking-[0.1em] text-white/55 transition-colors hover:text-lime"
+            className="font-condensed text-lg font-bold uppercase tracking-[0.1em] text-white/55 transition-colors hover:text-lime md:text-sm"
           >
             Mot de passe oublie ?
           </Link>
@@ -67,12 +67,12 @@ export default function Login() {
       </form>
 
       {error && (
-        <p className="mt-8 border border-pink/50 bg-pink/10 px-5 py-4 text-sm text-pink">
+        <p className="mt-8 border border-pink/50 bg-pink/10 px-5 py-4 text-sm text-pink md:mt-4 md:py-3">
           {error}
         </p>
       )}
 
-      <p className="mt-10 text-center font-condensed text-xl font-bold uppercase tracking-[0.08em] text-white/55">
+      <p className="mt-10 text-center font-condensed text-xl font-bold uppercase tracking-[0.08em] text-white/55 md:mt-5 md:text-base">
         Pas encore inscrit ?{" "}
         <Link href="/register" className="text-lime transition-colors duration-200 hover:text-white">
           S&apos;inscrire
