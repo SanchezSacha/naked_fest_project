@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import FavoriteButton from "@/components/FavoriteButton";
-import { getFallbackEvent } from "@/lib/festival-events";
 import { fetchStrapiEvents } from "@/lib/strapi";
 
 const backRoutes: Record<string, { href: string; label: string }> = {
@@ -21,14 +20,8 @@ export default async function EventDetailPage({
   const { from } = await searchParams;
   const back = backRoutes[from ?? ""] ?? { href: "/programme", label: "Retour au programme" };
 
-  let event = getFallbackEvent(eventId);
-
-  try {
-    const strapiEvents = await fetchStrapiEvents();
-    event = strapiEvents.find((item) => item.id === eventId) ?? event;
-  } catch {
-    // The detail page remains available with local fallback data.
-  }
+  const events = await fetchStrapiEvents();
+  const event = events.find((item) => item.id === eventId);
 
   if (!event) notFound();
 

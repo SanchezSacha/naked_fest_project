@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Button from "@/components/Button";
 
 type ScheduledPush = {
   id: number;
@@ -183,12 +184,9 @@ export default function AdminScheduledManager() {
         <h2 className="font-condensed text-xl font-bold uppercase tracking-[0.15em] text-white">
           Notifications programmées
         </h2>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="rounded bg-lime px-4 py-2 font-condensed text-sm font-bold uppercase tracking-[0.1em] text-black transition-colors hover:bg-lime/80"
-        >
+        <Button onClick={() => setShowForm(!showForm)} color="lime" variant="solid" size="sm">
           {showForm ? "Annuler" : "+ Programmer"}
-        </button>
+        </Button>
       </div>
 
       {showForm && (
@@ -333,13 +331,9 @@ export default function AdminScheduledManager() {
 
           {error && <p className="mt-4 text-sm text-pink">{error}</p>}
 
-          <button
-            type="submit"
-            disabled={saving}
-            className="mt-4 rounded bg-lime px-6 py-2 font-condensed text-sm font-bold uppercase tracking-[0.1em] text-black transition-colors hover:bg-lime/80 disabled:opacity-50"
-          >
+          <Button type="submit" color="lime" variant="solid" size="sm" disabled={saving} className="mt-4">
             {saving ? "Programmation..." : "Programmer l'envoi"}
-          </button>
+          </Button>
         </form>
       )}
 

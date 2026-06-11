@@ -1,9 +1,54 @@
 import type { FestivalEvent } from "@/lib/festival-events";
 
-const fallbackImages = ["/event_1.png", "/Event_2.png", "/event_3.png"];
+type JsonRecord = Record<string, unknown>;
+
+export type HomeFeature = {
+  icon: string;
+  iconAlt: string;
+  title: string;
+  description: string;
+};
+
+export type HomeStat = {
+  value: string;
+  label: string;
+  color: "lime" | "pink" | "cyan" | "violet";
+};
+
+export type PracticalInfo = {
+  number: string;
+  color: "lime" | "pink" | "cyan" | "violet";
+  title: string;
+  body: string;
+};
+
+export type StrapiHomePage = {
+  heroEyebrow: string;
+  title: string;
+  edition: string;
+  tagline: string;
+  locationLabel: string;
+  heroImage: string;
+  features: HomeFeature[];
+  stats: HomeStat[];
+  featuredEvents: FestivalEvent[];
+  mapTitle: string;
+  mapSubtitle: string;
+  mapDescription: string;
+  mapImage: string;
+  practicalInfos: PracticalInfo[];
+};
 
 function getStrapiUrl() {
   return (process.env.STRAPI_URL ?? "http://localhost:1337").replace(/\/$/, "");
+}
+
+function getHeaders(): HeadersInit {
+  const headers: HeadersInit = {};
+  if (process.env.STRAPI_API_TOKEN) {
+    headers.Authorization = `Bearer ${process.env.STRAPI_API_TOKEN}`;
+  }
+  return headers;
 }
 
 function slugify(value: string) {
@@ -23,89 +68,71 @@ function getCategory(value: string): FestivalEvent["category"] {
   return "concerts";
 }
 
-function getAttributes(item: Record<string, unknown>) {
+function getAttributes(item: JsonRecord) {
   return (item.attributes && typeof item.attributes === "object"
     ? item.attributes
-    : item) as Record<string, unknown>;
+    : item) as JsonRecord;
+}
+
+function relationItems(value: unknown): JsonRecord[] {
+  if (!value || typeof value !== "object") return [];
+  const record = value as JsonRecord;
+  const data = record.data ?? value;
+  if (Array.isArray(data)) {
+    return data.filter((item): item is JsonRecord => Boolean(item) && typeof item === "object");
+  }
+  return data && typeof data === "object" ? [data as JsonRecord] : [];
 }
 
 function getRelationName(value: unknown): string | null {
-  if (!value) return null;
-  if (typeof value === "string") return value;
-
-  if (Array.isArray(value)) {
-    return value.map(getRelationName).filter(Boolean).join(", ") || null;
-  }
-
-  if (typeof value === "object") {
-    const record = value as Record<string, unknown>;
-
-    if (Array.isArray(record.data)) {
-      return record.data.map(getRelationName).filter(Boolean).join(", ") || null;
-    }
-
-    if (record.data && typeof record.data === "object") {
-      return getRelationName(record.data);
-    }
-
-    const attrs = getAttributes(record);
-    return String(attrs.name ?? attrs.title ?? attrs.label ?? "").trim() || null;
-  }
-
-  return null;
+  const item = relationItems(value)[0];
+  if (!item) return typeof value === "string" ? value : null;
+  const attrs = getAttributes(item);
+  return String(attrs.name ?? attrs.title ?? attrs.label ?? "").trim() || null;
 }
 
-function getMediaUrl(value: unknown, fallback: string) {
-  if (!value) return fallback;
-
-  if (typeof value === "string") {
-    return value.startsWith("http") || value.startsWith("/") ? value : fallback;
-  }
-
-  if (typeof value !== "object") return fallback;
-
-  const record = value as Record<string, unknown>;
-  const media = Array.isArray(record.data) ? record.data[0] : record.data ?? record;
-
-  if (!media || typeof media !== "object") return fallback;
-
-  const attrs = getAttributes(media as Record<string, unknown>);
-  const url = attrs.url;
-
-  if (typeof url !== "string") return fallback;
-  if (url.startsWith("http")) return url;
-
-  return `${getStrapiUrl()}${url}`;
+function getEventArtistNames(value: unknown): string[] {
+  return relationItems(value)
+    .sort((a, b) => Number(getAttributes(a).order ?? 0) - Number(getAttributes(b).order ?? 0))
+    .map((item) => getRelationName(getAttributes(item).artist))
+    .filter((name): name is string => Boolean(name));
 }
 
-function getDayId(startsAt: string | null, fallback: unknown): FestivalEvent["day"] {
-  if (fallback === "VEN" || fallback === "SAM" || fallback === "DIM") {
-    return fallback;
+function getMediaUrl(value: unknown) {
+  const item =
+    relationItems(value)[0] ??
+    (value && typeof value === "object" ? (value as JsonRecord) : null);
+  if (!item) throw new Error("Un media requis est absent dans Strapi.");
+  const url = getAttributes(item).url;
+  if (typeof url !== "string" || !url) throw new Error("URL de media Strapi invalide.");
+  if (url.startsWith("/uploads/")) {
+    return `/api/strapi/media/${url.slice("/uploads/".length)}`;
   }
+  return url;
+}
 
-  if (!startsAt) return "SAM";
-
+function getDayId(startsAt: string, value: unknown): FestivalEvent["day"] {
+  if (value === "VEN" || value === "SAM" || value === "DIM") return value;
   const day = new Date(startsAt).getDay();
   if (day === 5) return "VEN";
   if (day === 0) return "DIM";
   return "SAM";
 }
 
-function getTime(startsAt: string | null, fallback: unknown) {
-  if (typeof fallback === "string" && fallback.trim()) return fallback;
-  if (!startsAt) return "23:00";
-
+function getTime(startsAt: string) {
   return new Intl.DateTimeFormat("fr-FR", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
+    timeZone: "Europe/Paris",
   }).format(new Date(startsAt));
 }
 
-function getDateLabel(day: FestivalEvent["day"], startsAt: string | null) {
-  if (!startsAt) return `${day} 25`;
-  const date = new Date(startsAt);
-  return `${day} ${String(date.getDate()).padStart(2, "0")}`;
+function getDuration(startsAt: string, endsAt: string) {
+  const minutes = Math.max(0, Math.round((Date.parse(endsAt) - Date.parse(startsAt)) / 60_000));
+  const hours = Math.floor(minutes / 60);
+  const remaining = minutes % 60;
+  return `${hours ? `${hours}H` : ""}${remaining ? String(remaining).padStart(2, "0") : ""}` || "0H";
 }
 
 function getDayStyle(day: FestivalEvent["day"]) {
@@ -117,7 +144,6 @@ function getDayStyle(day: FestivalEvent["day"]) {
       hoverBorder: "group-hover:[border-top-color:#00f5ff]",
     };
   }
-
   if (day === "DIM") {
     return {
       dateBg: "bg-pink",
@@ -126,7 +152,6 @@ function getDayStyle(day: FestivalEvent["day"]) {
       hoverBorder: "group-hover:[border-top-color:#ff2d9b]",
     };
   }
-
   return {
     dateBg: "bg-lime",
     dateText: "text-dark",
@@ -135,71 +160,105 @@ function getDayStyle(day: FestivalEvent["day"]) {
   };
 }
 
-function mapStrapiEvent(item: Record<string, unknown>, index: number): FestivalEvent {
+function mapStrapiEvent(item: JsonRecord): FestivalEvent {
   const attrs = getAttributes(item);
-  const startsAt = typeof attrs.startsAt === "string" ? attrs.startsAt : null;
-  const endsAt = typeof attrs.endsAt === "string" ? attrs.endsAt : startsAt;
+  const startsAt = String(attrs.startsAt ?? "");
+  const endsAt = String(attrs.endsAt ?? startsAt);
+  if (!startsAt || !endsAt) throw new Error("Dates d'evenement Strapi manquantes.");
+
   const day = getDayId(startsAt, attrs.day);
-  const style = getDayStyle(day);
-  const genre = getRelationName(attrs.genre ?? attrs.musicGenre) ?? String(attrs.genreName ?? "Live").trim();
-  const category = getRelationName(attrs.category) ?? String(attrs.type ?? "concerts").trim();
-  const artist =
-    getRelationName(attrs.artists ?? attrs.artist) ??
-    String(attrs.artistName ?? attrs.title ?? "Evenement N'FEST").trim();
-  const rawId = item.documentId ?? item.id ?? attrs.slug ?? attrs.id ?? slugify(artist);
+  const names = getEventArtistNames(attrs.eventArtists);
+  const artist = names[0] ?? String(attrs.title ?? "");
+  const genre = getRelationName(attrs.genre) ?? "";
+  const locationItem = relationItems(attrs.location)[0];
+  const location = locationItem ? getAttributes(locationItem) : {};
+  const category = getRelationName(attrs.category) ?? String(attrs.type ?? "");
+  const id = String(attrs.slug ?? item.documentId ?? item.id ?? "");
+  const strapiId = Number(item.id ?? attrs.id);
+  if (!id || !Number.isInteger(strapiId) || !artist || !genre) {
+    throw new Error("Relations d'evenement Strapi incompletes.");
+  }
 
   return {
-    id: String(rawId),
-    title: String(attrs.title ?? artist).trim(),
-    day,
-    dateLabel: getDateLabel(day, startsAt),
-    startsAt: startsAt ?? "2027-01-25T23:00:00+01:00",
-    endsAt: endsAt ?? startsAt ?? "2027-01-26T00:30:00+01:00",
-    image: getMediaUrl(attrs.image ?? attrs.cover, fallbackImages[index % fallbackImages.length]),
+    id,
+    strapiId,
+    title: String(attrs.title ?? artist),
     artist,
-    speakers: artist.split(",").map((name) => name.trim()).filter(Boolean),
+    speakers: names.length > 0 ? names : [artist],
+    category: getCategory(category),
     genre,
-    origin: String(attrs.origin ?? attrs.country ?? "FR").trim(),
-    stage: getRelationName(attrs.location ?? attrs.stage) ?? String(attrs.stageName ?? "Scene principale").trim(),
-    time: getTime(startsAt, attrs.time),
-    duration: String(attrs.duration ?? "1H30").trim(),
-    address: String(attrs.address ?? "Fatal Fields, Ardennes, France").trim(),
-    latitude: Number(attrs.latitude ?? 49.763),
-    longitude: Number(attrs.longitude ?? 4.7202),
-    description: String(
-      attrs.description ?? "Retrouvez toutes les informations de cet evenement N'FEST.",
-    ).trim(),
-    category: getCategory(category || "concerts"),
-    genreId: slugify(genre || "live"),
-    ...style,
+    genreId: slugify(genre),
+    origin: String(attrs.origin ?? ""),
+    day,
+    dateLabel: `${day} ${String(new Date(startsAt).getDate()).padStart(2, "0")}`,
+    startsAt,
+    endsAt,
+    time: getTime(startsAt),
+    duration: getDuration(startsAt, endsAt),
+    stage: String(location.name ?? ""),
+    address: String(location.address ?? ""),
+    latitude: Number(location.latitude),
+    longitude: Number(location.longitude),
+    description: String(attrs.description ?? ""),
+    image: getMediaUrl(attrs.image),
+    ...getDayStyle(day),
   };
 }
 
+function addEventPopulate(url: URL, prefix = "populate") {
+  url.searchParams.set(`${prefix}[image]`, "true");
+  url.searchParams.set(`${prefix}[category]`, "true");
+  url.searchParams.set(`${prefix}[genre]`, "true");
+  url.searchParams.set(`${prefix}[location]`, "true");
+  url.searchParams.set(`${prefix}[eventArtists][populate][artist]`, "true");
+}
+
 export async function fetchStrapiEvents(): Promise<FestivalEvent[]> {
-  const baseUrl = getStrapiUrl();
-  const url = new URL("/api/events", baseUrl);
-  url.searchParams.set("populate", "*");
+  const url = new URL("/api/events", getStrapiUrl());
+  addEventPopulate(url);
   url.searchParams.set("pagination[pageSize]", "100");
   url.searchParams.set("sort[0]", "startsAt:asc");
 
-  const headers: HeadersInit = {};
-  if (process.env.STRAPI_API_TOKEN) {
-    headers.Authorization = `Bearer ${process.env.STRAPI_API_TOKEN}`;
-  }
-
-  const response = await fetch(url, {
-    headers,
-    next: { revalidate: 30 },
-  });
-
-  if (!response.ok) {
-    throw new Error("Impossible de recuperer les evenements Strapi");
-  }
+  const response = await fetch(url, { headers: getHeaders(), next: { revalidate: 30 } });
+  if (!response.ok) throw new Error(`Strapi events: HTTP ${response.status}`);
 
   const payload = (await response.json()) as { data?: unknown };
-  const data = Array.isArray(payload.data) ? payload.data : [];
-
-  return data
-    .filter((item): item is Record<string, unknown> => Boolean(item) && typeof item === "object")
+  return (Array.isArray(payload.data) ? payload.data : [])
+    .filter((item): item is JsonRecord => Boolean(item) && typeof item === "object")
     .map(mapStrapiEvent);
+}
+
+function asArray<T>(value: unknown): T[] {
+  return Array.isArray(value) ? (value as T[]) : [];
+}
+
+export async function fetchStrapiHomePage(): Promise<StrapiHomePage> {
+  const url = new URL("/api/home-page", getStrapiUrl());
+  url.searchParams.set("populate[heroImage]", "true");
+  url.searchParams.set("populate[mapImage]", "true");
+  addEventPopulate(url, "populate[featuredEvents][populate]");
+
+  const response = await fetch(url, { headers: getHeaders(), next: { revalidate: 30 } });
+  if (!response.ok) throw new Error(`Strapi home page: HTTP ${response.status}`);
+
+  const payload = (await response.json()) as { data?: JsonRecord };
+  if (!payload.data) throw new Error("La page d'accueil Strapi est vide.");
+  const attrs = getAttributes(payload.data);
+
+  return {
+    heroEyebrow: String(attrs.heroEyebrow ?? ""),
+    title: String(attrs.title ?? ""),
+    edition: String(attrs.edition ?? ""),
+    tagline: String(attrs.tagline ?? ""),
+    locationLabel: String(attrs.locationLabel ?? ""),
+    heroImage: getMediaUrl(attrs.heroImage),
+    features: asArray<HomeFeature>(attrs.features),
+    stats: asArray<HomeStat>(attrs.stats),
+    featuredEvents: relationItems(attrs.featuredEvents).map(mapStrapiEvent),
+    mapTitle: String(attrs.mapTitle ?? ""),
+    mapSubtitle: String(attrs.mapSubtitle ?? ""),
+    mapDescription: String(attrs.mapDescription ?? ""),
+    mapImage: getMediaUrl(attrs.mapImage),
+    practicalInfos: asArray<PracticalInfo>(attrs.practicalInfos),
+  };
 }

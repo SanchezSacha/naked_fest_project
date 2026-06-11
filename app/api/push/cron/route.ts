@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { isPushConfigured, sendPushToTargets } from "@/lib/push";
+import { fetchStrapiEvents } from "@/lib/strapi";
 import { ReminderDelay } from "@/app/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -28,7 +29,7 @@ async function processDueReminders() {
       remindAt: { lte: now },
       pushSubscriptionId: { not: null },
     },
-    include: { event: true, pushSubscription: true },
+    include: { pushSubscription: true },
   });
 
   if (due.length === 0) {
@@ -37,19 +38,22 @@ async function processDueReminders() {
 
   const expiredEndpoints = new Set<string>();
   const sentReminderIds: number[] = [];
+  const events = await fetchStrapiEvents();
+  const eventsById = new Map(events.map((event) => [event.strapiId, event]));
   let sent = 0;
   let failed = 0;
 
   for (const reminder of due) {
     const sub = reminder.pushSubscription;
-    if (!sub) continue;
+    const event = eventsById.get(reminder.eventId);
+    if (!sub || !event) continue;
 
     const result = await sendPushToTargets(
       [{ endpoint: sub.endpoint, p256dh: sub.p256dh, auth: sub.auth }],
       {
-        title: reminder.event.title,
+        title: event.title,
         body: `Ca commence ${DELAY_LABEL[reminder.delay]} !`,
-        url: "/programme",
+        url: `/programme/${event.id}`,
         tag: `reminder-${reminder.id}`,
       },
     );

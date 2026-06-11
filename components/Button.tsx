@@ -4,7 +4,7 @@ import Link from "next/link";
 import { type ReactNode } from "react";
 
 type ButtonColor = "lime" | "pink" | "cyan" | "violet" | "white";
-type ButtonVariant = "solid" | "outline" | "ghost" | "subtle";
+type ButtonVariant = "solid" | "solid-dark" | "outline" | "outline-inverse" | "ghost" | "subtle";
 type ButtonSize = "sm" | "md" | "lg";
 
 type BaseProps = {
@@ -41,12 +41,28 @@ const solidMap: Record<ButtonColor, string> = {
   white:  "bg-white text-dark border border-white hover:bg-white/90",
 };
 
+const solidDarkMap: Record<ButtonColor, string> = {
+  lime:   "bg-lime text-dark border border-lime hover:bg-dark hover:text-lime hover:shadow-[0_0_18px_rgba(200,255,0,0.25)]",
+  pink:   "bg-pink text-dark border border-pink hover:bg-dark hover:text-pink hover:shadow-[0_0_18px_rgba(255,45,155,0.25)]",
+  cyan:   "bg-cyan text-dark border border-cyan hover:bg-dark hover:text-cyan hover:shadow-[0_0_18px_rgba(0,245,255,0.25)]",
+  violet: "bg-violet text-dark border border-violet hover:bg-dark hover:text-violet hover:shadow-[0_0_18px_rgba(191,95,255,0.25)]",
+  white:  "bg-white text-dark border border-white hover:bg-dark hover:text-white hover:shadow-[0_0_18px_rgba(255,255,255,0.12)]",
+};
+
 const outlineMap: Record<ButtonColor, string> = {
   lime:   "bg-transparent text-lime border border-lime hover:bg-lime/10",
   pink:   "bg-transparent text-pink border border-pink hover:bg-pink/10",
   cyan:   "bg-transparent text-cyan border border-cyan hover:bg-cyan/10",
   violet: "bg-transparent text-violet border border-violet hover:bg-violet/10",
   white:  "bg-transparent text-white border border-white/30 hover:border-white hover:text-white",
+};
+
+const outlineInverseMap: Record<ButtonColor, string> = {
+  lime:   "bg-transparent text-lime border border-lime hover:bg-lime hover:text-dark",
+  pink:   "bg-transparent text-pink border border-pink hover:bg-pink hover:text-dark",
+  cyan:   "bg-transparent text-cyan border border-cyan hover:bg-cyan hover:text-dark",
+  violet: "bg-transparent text-violet border border-violet hover:bg-violet hover:text-dark",
+  white:  "bg-transparent text-white border border-white/30 hover:bg-white hover:text-dark",
 };
 
 const ghostMap: Record<ButtonColor, string> = {
@@ -67,11 +83,13 @@ const subtleMap: Record<ButtonColor, string> = {
 
 function variantClasses(variant: ButtonVariant, color: ButtonColor): string {
   switch (variant) {
-    case "solid":   return solidMap[color];
-    case "outline": return outlineMap[color];
-    case "ghost":   return ghostMap[color];
-    case "subtle":  return subtleMap[color];
-    default:        return "";
+    case "solid":         return solidMap[color];
+    case "solid-dark":    return solidDarkMap[color];
+    case "outline":       return outlineMap[color];
+    case "outline-inverse": return outlineInverseMap[color];
+    case "ghost":         return ghostMap[color];
+    case "subtle":        return subtleMap[color];
+    default:              return "";
   }
 }
 

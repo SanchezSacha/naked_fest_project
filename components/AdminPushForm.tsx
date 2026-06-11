@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Button from "@/components/Button";
 
 type PushTopic = {
   id: number;
@@ -198,11 +199,7 @@ export default function AdminPushForm() {
         </div>
       )}
 
-      <button
-        type="submit"
-        disabled={busy}
-        className="self-start bg-lime px-10 py-4 font-condensed text-xs font-bold uppercase tracking-[0.3em] text-dark transition-all duration-300 hover:opacity-80 disabled:opacity-50"
-      >
+      <Button type="submit" color="lime" variant="solid" size="lg" disabled={busy} className="self-start">
         {busy
           ? "Envoi..."
           : topicKey
@@ -210,7 +207,7 @@ export default function AdminPushForm() {
                 topics.find((t) => t.key === topicKey)?.label || topicKey
               }"`
             : "Envoyer a tous les abonnes"}
-      </button>
+      </Button>
 
       {result && (
         <p className="border border-lime bg-white/5 px-5 py-4 font-condensed text-sm uppercase tracking-[0.15em] text-lime">
