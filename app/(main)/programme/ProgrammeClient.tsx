@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import FavoriteButton from "@/components/FavoriteButton";
 import ProgramFilters, { type FilterState } from "@/components/ProgramFilters";
-import ProgrammeUserBar from "@/components/ProgrammeUserBar";
+import EventNotifyButton from "@/components/EventNotifyButton";
 import type { DayId, FestivalEvent } from "@/lib/festival-events";
 
 const days: { id: DayId; label: string; date: string; sub: string; color: string }[] = [
@@ -73,8 +73,6 @@ export default function ProgrammeClient({
           </p>
         </div>
       </section>
-
-      <ProgrammeUserBar />
 
       {/* ── DAY SELECTOR ───────────────────────────────────────────── */}
       <section className="sticky top-14 lg:top-16 z-40 border-b border-dark-border/60 glass">
@@ -196,10 +194,18 @@ export default function ProgrammeClient({
                   </div>
                 </div>
               </Link>
-              <FavoriteButton
-                eventId={event.id}
-                className="absolute right-4 top-16 z-10"
-              />
+              {/* Actions */}
+              <div className="absolute top-16 left-4 right-4 z-10 flex items-center justify-between gap-2">
+                <EventNotifyButton
+                  eventId={event.id}
+                  eventTitle={event.title || event.artist}
+                  eventStartsAt={event.startsAt}
+                />
+                <FavoriteButton
+                  eventId={event.id}
+                  className="h-10 w-10 px-0"
+                />
+              </div>
             </article>
           ))}
         </section>
