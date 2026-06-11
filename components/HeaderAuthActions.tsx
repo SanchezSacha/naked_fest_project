@@ -1,34 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { signOut } from "next-auth/react";
-import { useEffect, useState } from "react";
-
-type SessionResponse = {
-  user?: {
-    name?: string | null;
-    email?: string | null;
-  };
-};
+import { signOut, useSession } from "next-auth/react";
 
 export default function HeaderAuthActions() {
-  const [userName, setUserName] = useState<string | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { data: session, status } = useSession();
 
-  useEffect(() => {
-    fetch("/api/auth/session", { cache: "no-store" })
-      .then((res) => res.json())
-      .then((session: SessionResponse) => {
-        setUserName(session.user?.name || session.user?.email || null);
-        setIsLoaded(true);
-      })
-      .catch(() => {
-        setUserName(null);
-        setIsLoaded(true);
-      });
-  }, []);
-
-  if (!isLoaded) {
+  if (status === "loading") {
     return (
       <span className="border border-lime/40 px-6 py-3 font-condensed text-[10px] font-bold uppercase tracking-[0.25em] text-lime/60">
         ...
@@ -36,7 +14,8 @@ export default function HeaderAuthActions() {
     );
   }
 
-  if (userName) {
+  if (session?.user) {
+    const userName = session.user.name || session.user.email;
     return (
       <div className="flex items-center gap-3">
         <span className="hidden max-w-36 truncate font-condensed text-[11px] font-bold uppercase tracking-[0.16em] text-white/70 sm:inline">

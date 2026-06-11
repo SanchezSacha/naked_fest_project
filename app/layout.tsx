@@ -3,6 +3,7 @@ import { Bebas_Neue, Barlow_Condensed, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import SessionProvider from "@/components/SessionProvider";
 
 const bebasNeue = Bebas_Neue({
   variable: "--font-bebas-neue",
@@ -92,7 +93,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-dark text-white">
-        {children}
+        <SessionProvider>
+          {children}
+        </SessionProvider>
         <ServiceWorkerRegister />
         <PWAInstallPrompt />
       </body>

@@ -40,12 +40,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    jwt({ token, user, trigger, session }) {
       if (user) {
         token.name = user.name;
         token.email = user.email;
         token.sub = user.id;
         token.role = (user as { role?: string }).role;
+      }
+
+      // Les nouvelles valeurs sont passées directement via update({ name, email })
+      // et reçues ici dans `session` — pas de round-trip DB nécessaire
+      if (trigger === "update" && session) {
+        if (typeof (session as { name?: unknown }).name === "string") {
+          token.name = (session as { name: string }).name;
+        }
+        if (typeof (session as { email?: unknown }).email === "string") {
+          token.email = (session as { email: string }).email;
+        }
       }
 
       return token;
