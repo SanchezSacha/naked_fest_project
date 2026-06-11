@@ -111,10 +111,10 @@ export default function HomePage() {
 
           {/* CTA — lime solid → transparent outline on hover */}
           <Link
-            href="/billetterie"
+            href="/programme"
             className="mt-10 border-2 border-lime bg-lime text-dark font-condensed font-bold text-sm px-14 py-5 tracking-[0.35em] uppercase transition-all duration-300 hover:bg-[#111113] hover:[color:var(--neon-lime)]"
           >
-            Billetterie
+            Programme
           </Link>
         </div>
 
@@ -232,7 +232,7 @@ export default function HomePage() {
       </section>
 
       {/* ── MAP — FATAL FIELDS ────────────────────────────────────── */}
-      <section className="border-b border-[#252525] mt-2">
+      <section>
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Text block */}
           <div className="flex flex-col justify-center px-8 py-20 md:px-12 md:py-24 border-b md:border-b-0 md:border-r border-[#252525]">

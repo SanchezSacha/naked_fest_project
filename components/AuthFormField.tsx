@@ -9,6 +9,8 @@ type AuthFormFieldProps = {
   placeholder: string;
   type: string;
   autoComplete: string;
+  error?: string;
+  hint?: string;
   required?: boolean;
   minLength?: number;
 };
@@ -20,6 +22,8 @@ export default function AuthFormField({
   placeholder,
   type,
   autoComplete,
+  error,
+  hint,
   required = true,
   minLength,
 }: AuthFormFieldProps) {
@@ -34,6 +38,11 @@ export default function AuthFormField({
         className="font-condensed text-2xl font-bold uppercase tracking-[0.18em] text-white/75 transition-colors duration-200 group-focus-within:text-lime md:text-3xl"
       >
         {label}
+        {hint && (
+          <span className="ml-3 font-condensed text-xs font-normal normal-case tracking-[0.1em] text-white/40">
+            ({hint})
+          </span>
+        )}
       </label>
       <div className="relative mt-4">
         <input
@@ -46,7 +55,7 @@ export default function AuthFormField({
           minLength={minLength}
           className={`h-20 w-full border-4 border-[#343438] bg-black/45 px-6 font-condensed text-2xl tracking-[0.04em] text-white outline-none transition-all duration-200 placeholder:text-white/30 hover:border-lime/70 hover:bg-black/70 hover:placeholder:text-white/45 focus:border-lime focus:bg-black focus:shadow-[0_0_0_1px_var(--neon-lime)] md:h-24 ${
             isPasswordField ? "pr-20" : ""
-          }`}
+          } ${error ? "border-pink focus:border-pink focus:shadow-[0_0_0_1px_#ff2d9b]" : ""}`}
         />
         {isPasswordField && (
           <button
@@ -86,6 +95,11 @@ export default function AuthFormField({
               </svg>
             )}
           </button>
+        )}
+        {error && (
+          <p className="mt-2 font-condensed text-xs font-bold uppercase tracking-[0.15em] text-pink">
+            {error}
+          </p>
         )}
       </div>
     </div>

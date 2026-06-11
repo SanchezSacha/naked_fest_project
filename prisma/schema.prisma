@@ -96,11 +96,46 @@ model PushSubscription {
 
   user      User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   reminders EventReminder[]
+  topics    PushSubscriptionTopic[]
+  events    PushEventSubscription[] // Abonnements à des événements spécifiques
 
   @@index([userId])
 
   @@schema("app")
 
+}
+
+// Abonnement aux notifications d'événements spécifiques ( utilise slug Strapi )
+model PushEventSubscription {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  pushSubscriptionId Int
+  pushSubscription   PushSubscription @relation(fields: [pushSubscriptionId], references: [id], onDelete: Cascade)
+
+  eventSlug String // Slug Strapi (ex: "frontex", "dj-solar")
+  eventTitle String? // Titre pour affichage
+  eventStartsAt DateTime? // Date pour filtrer
+
+  reminders EventSubscriptionReminder[] // Rappels envoyés
+
+  @@unique([pushSubscriptionId, eventSlug]) // Un seul abonnement par event
+  @@index([pushSubscriptionId])
+  @@index([eventSlug])
+  @@index([eventStartsAt])
+}
+
+// Rappels envoyés pour les abonnements événements
+model EventSubscriptionReminder {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  sentAt    DateTime @default(now())
+
+  pushEventSubscriptionId Int
+  pushEventSubscription   PushEventSubscription @relation(fields: [pushEventSubscriptionId], references: [id], onDelete: Cascade)
+
+  @@unique([pushEventSubscriptionId]) // Un seul rappel par abonnement
+  @@index([pushEventSubscriptionId])
 }
 
 model EventReminder {
@@ -127,6 +162,38 @@ model EventReminder {
 
 }
 
+// Topics/Sources de notification (ex: General, Urgent, Programme, Benevoles)
+model PushTopic {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique // slug technique: "general", "urgent", "programme"
+  label       String   // affichage: "Général", "Urgent", "Programme"
+  description String?
+  color       String?  // couleur hex pour l'UI: "#ff2d9b"
+  isDefault   Boolean  @default(false) // abonnement automatique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  subscriptions   PushSubscriptionTopic[]
+  scheduledPushes ScheduledPush[]
+
+  @@index([isDefault])
+}
+
+// Table de jointure: abonnements aux topics
+model PushSubscriptionTopic {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  pushSubscriptionId Int
+  topicId            Int
+
+  pushSubscription PushSubscription @relation(fields: [pushSubscriptionId], references: [id], onDelete: Cascade)
+  topic            PushTopic       @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@unique([pushSubscriptionId, topicId])
+  @@index([topicId])
+}
+
 enum UserRole {
   USER
   ADMIN
@@ -142,4 +209,28 @@ enum ReminderDelay {
 
   @@schema("app")
 
+}
+
+// Notifications push programmées à une heure précise
+model ScheduledPush {
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(120)
+  body        String    @db.VarChar(500)
+  url         String?   @db.VarChar(500)
+  scheduledAt DateTime  // Heure exacte d'envoi
+  sentAt      DateTime? // null = pas encore envoyé
+  cancelledAt DateTime? // null = pas annulé
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Optionnel : filtrer par topic
+  topicId Int?
+  topic   PushTopic? @relation(fields: [topicId], references: [id], onDelete: SetNull)
+
+  createdById Int?
+
+  @@index([scheduledAt])
+  @@index([sentAt])
+  @@index([cancelledAt])
+  @@index([topicId])
 }

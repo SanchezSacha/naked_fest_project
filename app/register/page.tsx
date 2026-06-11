@@ -6,20 +6,58 @@ import AuthFormField from "@/components/AuthFormField";
 import AuthPage from "@/components/AuthPage";
 import AuthSubmitButton from "@/components/AuthSubmitButton";
 
+type ZodIssue = {
+  path: (string | number)[];
+  message: string;
+};
+
 type RegisterResponse = {
   error?: string;
+  details?: ZodIssue[];
   emailSent?: boolean;
   verificationUrl?: string;
 };
 
+type FieldErrors = {
+  name?: string;
+  email?: string;
+  password?: string;
+  passwordConfirmation?: string;
+};
+
+function translateZodMessage(issue: ZodIssue): string {
+  // Mapping des codes d'erreur Zod en messages user-friendly
+  switch (issue.message) {
+    case "Too small: expected string to have >=2 characters":
+      return "Min. 2 caracteres";
+    case "Too small: expected string to have >=12 characters":
+      return "Min. 12 caracteres requis";
+    case "Too big: expected string to have <=100 characters":
+      return "Max. 100 caracteres";
+    case "Invalid email":
+      return "Email invalide";
+    default:
+      // Message generique en francais pour les autres cas
+      if (issue.message.includes("too_small")) {
+        return "Valeur trop courte";
+      }
+      if (issue.message.includes("too_big")) {
+        return "Valeur trop longue";
+      }
+      return issue.message;
+  }
+}
+
 export default function Register() {
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [verificationUrl, setVerificationUrl] = useState<string | null>(null);
   const [emailSent, setEmailSent] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
   async function register(formData: FormData) {
     setError(null);
+    setFieldErrors({});
     setVerificationUrl(null);
     setEmailSent(false);
     setIsPending(true);
@@ -39,6 +77,18 @@ export default function Register() {
     setIsPending(false);
 
     if (!res.ok) {
+      // Construction des erreurs par champ avec traduction
+      const errors: FieldErrors = {};
+      data.details?.forEach((issue) => {
+        const field = issue.path[0] as keyof FieldErrors;
+        // Cas special : erreur de correspondance des mots de passe (path = ["passwordConfirmation"])
+        if (field === "passwordConfirmation" && issue.message.includes("ne correspondent pas")) {
+          errors.passwordConfirmation = "Les mots de passe ne correspondent pas";
+        } else if (field && !errors[field]) {
+          errors[field] = translateZodMessage(issue);
+        }
+      });
+      setFieldErrors(errors);
       setError(data.error ?? "Une erreur est survenue pendant l'inscription.");
       return;
     }
@@ -57,6 +107,7 @@ export default function Register() {
           placeholder="John Doe"
           type="text"
           autoComplete="name"
+          error={fieldErrors.name}
           minLength={2}
         />
         <AuthFormField
@@ -66,6 +117,7 @@ export default function Register() {
           placeholder="john.doe@example.com"
           type="email"
           autoComplete="email"
+          error={fieldErrors.email}
         />
         <AuthFormField
           id="password"
@@ -74,6 +126,8 @@ export default function Register() {
           placeholder="8 caracteres minimum"
           type="password"
           autoComplete="new-password"
+          error={fieldErrors.password}
+          hint="Min. 8 caracteres"
           minLength={8}
         />
         <AuthFormField
@@ -83,6 +137,7 @@ export default function Register() {
           placeholder="Confirmez votre mot de passe"
           type="password"
           autoComplete="new-password"
+          error={fieldErrors.passwordConfirmation}
           minLength={8}
         />
 
