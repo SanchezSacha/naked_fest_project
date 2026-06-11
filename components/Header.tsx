@@ -17,6 +17,28 @@ export default function Header() {
             <span className="absolute inset-0 blur-lg bg-lime/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-0" />
           </Link>
           
+          {/* Navigation desktop */}
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+            <Link
+              href="/"
+              className="font-condensed text-xs font-bold uppercase tracking-[0.2em] text-white/70 hover:text-lime transition-colors"
+            >
+              Accueil
+            </Link>
+            <Link
+              href="/programme"
+              className="font-condensed text-xs font-bold uppercase tracking-[0.2em] text-white/70 hover:text-lime transition-colors"
+            >
+              Programme
+            </Link>
+            <Link
+              href="/carte"
+              className="font-condensed text-xs font-bold uppercase tracking-[0.2em] text-white/70 hover:text-lime transition-colors"
+            >
+              Carte
+            </Link>
+          </nav>
+
           {/* Actions avec meilleurs boutons */}
           <div className="flex items-center gap-2 lg:gap-3">
             <Link
