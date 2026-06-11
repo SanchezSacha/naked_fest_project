@@ -68,6 +68,9 @@ export default function AdminScheduledManager() {
     setSaving(true);
 
     const scheduledAt = new Date(`${formData.date}T${formData.time}`);
+    console.log("[DEBUG] Form data:", formData);
+    console.log("[DEBUG] ScheduledAt:", scheduledAt);
+    
     if (scheduledAt <= new Date()) {
       setError("La date et heure doivent être dans le futur");
       setSaving(false);
@@ -75,17 +78,24 @@ export default function AdminScheduledManager() {
     }
 
     try {
+      const payload = {
+        title: formData.title,
+        body: formData.body,
+        url: formData.url || "/",
+        scheduledAt: scheduledAt.toISOString(),
+        topicKey: formData.topicKey || undefined,
+      };
+      console.log("[DEBUG] Payload:", payload);
+
       const res = await fetch("/api/push/scheduled", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: formData.title,
-          body: formData.body,
-          url: formData.url || "/",
-          scheduledAt: scheduledAt.toISOString(),
-          topicKey: formData.topicKey || undefined,
-        }),
+        body: JSON.stringify(payload),
       });
+
+      console.log("[DEBUG] Response status:", res.status);
+      const data = await res.json().catch(() => ({ error: "Réponse invalide" }));
+      console.log("[DEBUG] Response data:", data);
 
       if (res.ok) {
         setShowForm(false);
@@ -99,11 +109,14 @@ export default function AdminScheduledManager() {
         });
         fetchData();
       } else {
-        const data = await res.json();
-        setError(data.error || "Erreur lors de la programmation");
+        const errorMsg = data.details 
+          ? `${data.error} - ${data.details}` 
+          : (data.error || `Erreur ${res.status}: ${JSON.stringify(data)}`);
+        setError(errorMsg);
       }
-    } catch {
-      setError("Erreur réseau");
+    } catch (err) {
+      console.error("[DEBUG] Network error:", err);
+      setError(`Erreur réseau: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setSaving(false);
     }

@@ -31,13 +31,20 @@ export async function GET() {
 
 // POST - Créer une notification programmée (admin)
 export async function POST(req: NextRequest) {
+  console.log("[API scheduled] POST called");
+  
   const session = await auth();
+  console.log("[API scheduled] Session:", session?.user?.email, "role:", session?.user?.role);
+  
   if (!session?.user || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
   const body = await req.json().catch(() => null);
+  console.log("[API scheduled] Body:", body);
+  
   const parsed = scheduledSchema.safeParse(body);
+  console.log("[API scheduled] Parsed:", parsed.success, parsed.error?.issues);
 
   if (!parsed.success) {
     return NextResponse.json(
@@ -47,12 +54,17 @@ export async function POST(req: NextRequest) {
   }
 
   const { title, body: pushBody, url, scheduledAt, topicKey } = parsed.data;
+  console.log("[API scheduled] Data:", { title, pushBody, url, scheduledAt, topicKey });
 
-  // Vérifier que la date est dans le futur
+  // Vérifier que la date est dans le futur (avec 1 min de tolérance)
   const scheduledDate = new Date(scheduledAt);
-  if (scheduledDate <= new Date()) {
+  const now = new Date();
+  const nowWithTolerance = new Date(now.getTime() - 60 * 1000); // 1 min de tolérance
+  console.log("[API scheduled] ScheduledDate:", scheduledDate, "Now:", now, "Tolerance:", nowWithTolerance);
+  
+  if (scheduledDate <= nowWithTolerance) {
     return NextResponse.json(
-      { error: "La date doit être dans le futur" },
+      { error: "La date doit être dans le futur (actuellement: " + now.toISOString() + ")" },
       { status: 400 }
     );
   }
@@ -60,6 +72,7 @@ export async function POST(req: NextRequest) {
   // Récupérer le topic si spécifié
   let topicId: number | null = null;
   if (topicKey) {
+    console.log("[API scheduled] Looking for topic:", topicKey);
     const topic = await prisma.pushTopic.findUnique({
       where: { key: topicKey },
     });
@@ -67,20 +80,53 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Topic inconnu" }, { status: 404 });
     }
     topicId = topic.id;
+    console.log("[API scheduled] Found topic:", topic.id);
   }
 
-  const scheduled = await prisma.scheduledPush.create({
-    data: {
-      title,
-      body: pushBody,
-      url: url || null,
-      scheduledAt: scheduledDate,
-      topicId,
-    },
-    include: {
-      topic: { select: { key: true, label: true, color: true } },
-    },
-  });
-
-  return NextResponse.json(scheduled, { status: 201 });
+  console.log("[API scheduled] Creating scheduled push...");
+  
+  // Test: verifier que la table existe
+  try {
+    const count = await prisma.scheduledPush.count();
+    console.log("[API scheduled] Table exists, current count:", count);
+  } catch (tableErr) {
+    console.error("[API scheduled] Table access error:", tableErr);
+    return NextResponse.json(
+      { 
+        error: "La table ScheduledPush n'existe pas en base", 
+        details: "Executez: npx prisma db push --accept-data-loss",
+        tableError: String(tableErr)
+      },
+      { status: 500 }
+    );
+  }
+  
+  try {
+    const scheduled = await prisma.scheduledPush.create({
+      data: {
+        title,
+        body: pushBody,
+        url: url || null,
+        scheduledAt: scheduledDate,
+        topicId,
+      },
+      include: {
+        topic: { select: { key: true, label: true, color: true } },
+      },
+    });
+    console.log("[API scheduled] Created:", scheduled.id);
+    return NextResponse.json(scheduled, { status: 201 });
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    const errorCode = (err as { code?: string }).code;
+    console.error("[API scheduled] Error creating:", err);
+    return NextResponse.json(
+      { 
+        error: "Erreur base de données", 
+        details: errorMessage,
+        code: errorCode
+      }, 
+      { status: 500 }
+    );
+  }
 }
