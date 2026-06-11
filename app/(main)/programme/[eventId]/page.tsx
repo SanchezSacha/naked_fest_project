@@ -5,12 +5,22 @@ import FavoriteButton from "@/components/FavoriteButton";
 import { getFallbackEvent } from "@/lib/festival-events";
 import { fetchStrapiEvents } from "@/lib/strapi";
 
+const backRoutes: Record<string, { href: string; label: string }> = {
+  recherche: { href: "/recherche", label: "Retour a la recherche" },
+  favoris: { href: "/favoris", label: "Retour aux favoris" },
+};
+
 export default async function EventDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ eventId: string }>;
+  searchParams: Promise<{ from?: string }>;
 }) {
   const { eventId } = await params;
+  const { from } = await searchParams;
+  const back = backRoutes[from ?? ""] ?? { href: "/programme", label: "Retour au programme" };
+
   let event = getFallbackEvent(eventId);
 
   try {
@@ -30,10 +40,10 @@ export default async function EventDetailPage({
     <>
       <section className="border-b border-[#252525] px-8 pb-12 pt-14 md:px-12">
         <Link
-          href="/programme"
+          href={back.href}
           className="inline-flex items-center gap-2 font-condensed text-xs uppercase tracking-[0.18em] text-white/45 transition-colors hover:text-white"
         >
-          <span aria-hidden="true">←</span> Retour au programme
+          <span aria-hidden="true">←</span> {back.label}
         </Link>
 
         <div className="mt-10 flex flex-wrap items-center gap-3">
