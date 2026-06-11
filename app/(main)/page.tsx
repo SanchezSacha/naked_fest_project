@@ -18,7 +18,7 @@ const features = [
     color: "cyan" },
 ];
 
-const events = [
+const featuredEvents = [
   { image: "/event_1.png",  artist: "Frontex",  genre: "Techno Industrielle", origin: "DE",
     date: "SAM 25", time: "23:00", day: "Samedi",
     color: "lime",
@@ -209,7 +209,7 @@ export default function HomePage() {
 
         {/* Event cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-dark-border/60">
-          {events.map((e) => (
+          {featuredEvents.map((e) => (
             <Link
               key={e.artist}
               href={e.href}
@@ -294,7 +294,7 @@ export default function HomePage() {
           {/* Map image */}
           <div className="relative h-80 lg:h-auto min-h-[400px] order-1 lg:order-2 overflow-hidden">
             <Image
-              src="/map_homepage.png"
+              src="/fatal_fields_winter_map.webp"
               alt="Carte Fatal Fields"
               fill
               className="object-cover transition-transform duration-700 hover:scale-105"
