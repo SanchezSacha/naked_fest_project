@@ -18,10 +18,17 @@ const registerSchema = z
   });
 
 export async function POST(req: NextRequest) {
-  const parsed = registerSchema.safeParse(await req.json());
+  const body = await req.json();
+  console.log("[REGISTER] Body received:", body);
+
+  const parsed = registerSchema.safeParse(body);
 
   if (!parsed.success) {
-    return NextResponse.json({ error: "Donnees invalides" }, { status: 400 });
+    console.error("[REGISTER] Zod issues:", parsed.error.issues);
+    return NextResponse.json(
+      { error: "Donnees invalides", details: parsed.error.issues },
+      { status: 400 }
+    );
   }
 
   const { email, name, password } = parsed.data;
