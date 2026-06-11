@@ -208,9 +208,9 @@ export default async function HomePage() {
             </div>
             <Link
               href="/programme"
-              className="font-condensed text-xs uppercase tracking-[0.2em] text-lime transition-colors hover:text-white"
+              className="font-condensed text-xs uppercase tracking-[0.2em] text-lime transition-colors hover:text-lime/80"
             >
-              Voir tout le programme
+              Voir tout le programme →
             </Link>
           </div>
         </div>
