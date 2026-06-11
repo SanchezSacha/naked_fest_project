@@ -299,10 +299,25 @@ model PushEventSubscription {
   eventTitle String? // Titre pour affichage
   eventStartsAt DateTime? // Date pour filtrer
 
+  reminders EventSubscriptionReminder[] // Rappels envoyés
+
   @@unique([pushSubscriptionId, eventSlug]) // Un seul abonnement par event
   @@index([pushSubscriptionId])
   @@index([eventSlug])
   @@index([eventStartsAt])
+}
+
+// Rappels envoyés pour les abonnements événements
+model EventSubscriptionReminder {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  sentAt    DateTime @default(now())
+
+  pushEventSubscriptionId Int
+  pushEventSubscription   PushEventSubscription @relation(fields: [pushEventSubscriptionId], references: [id], onDelete: Cascade)
+
+  @@unique([pushEventSubscriptionId]) // Un seul rappel par abonnement
+  @@index([pushEventSubscriptionId])
 }
 
 model EventReminder {

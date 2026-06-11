@@ -171,6 +171,86 @@ async function processScheduledPushes() {
   };
 }
 
+// Traitement des rappels pour événements suivis (30 min avant)
+async function processEventSubscriptions() {
+  const now = new Date();
+  const thirtyMinutesFromNow = new Date(now.getTime() + 30 * 60 * 1000);
+  const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+
+  // Récupérer les abonnements à des événements qui commencent dans ~30 min
+  const dueSubscriptions = await prisma.pushEventSubscription.findMany({
+    where: {
+      eventStartsAt: {
+        gte: thirtyMinutesFromNow,
+        lte: new Date(thirtyMinutesFromNow.getTime() + 5 * 60 * 1000), // fenêtre de 5 min
+      },
+      reminders: { none: {} }, // Pas encore de rappel envoyé
+    },
+    include: {
+      pushSubscription: {
+        select: { endpoint: true, p256dh: true, auth: true },
+      },
+    },
+  });
+
+  if (dueSubscriptions.length === 0) {
+    return { processed: 0, sent: 0, failed: 0, removed: 0 };
+  }
+
+  const expiredEndpoints = new Set<string>();
+  const sentReminderIds: number[] = [];
+  let sent = 0;
+  let failed = 0;
+
+  for (const sub of dueSubscriptions) {
+    const pushSub = sub.pushSubscription;
+    if (!pushSub) continue;
+
+    const result = await sendPushToTargets(
+      [{ endpoint: pushSub.endpoint, p256dh: pushSub.p256dh, auth: pushSub.auth }],
+      {
+        title: sub.eventTitle || "Ça commence bientôt !",
+        body: `Votre événement commence dans 30 minutes`,
+        url: "/programme",
+        tag: `event-sub-${sub.id}`,
+      },
+    );
+
+    sent += result.sent;
+    failed += result.failed;
+    result.expiredEndpoints.forEach((e) => expiredEndpoints.add(e));
+
+    // Marquer comme envoyé
+    if (result.sent > 0) {
+      sentReminderIds.push(sub.id);
+    }
+  }
+
+  // Créer les entrées EventSubscriptionReminder pour les envoyés
+  if (sentReminderIds.length > 0) {
+    await prisma.eventSubscriptionReminder.createMany({
+      data: sentReminderIds.map((id) => ({
+        pushEventSubscriptionId: id,
+      })),
+      skipDuplicates: true,
+    });
+  }
+
+  // Nettoyer les subscriptions expirées
+  if (expiredEndpoints.size > 0) {
+    await prisma.pushSubscription.deleteMany({
+      where: { endpoint: { in: Array.from(expiredEndpoints) } },
+    });
+  }
+
+  return {
+    processed: dueSubscriptions.length,
+    sent,
+    failed,
+    removed: expiredEndpoints.size,
+  };
+}
+
 async function handle(req: NextRequest) {
   if (!isAuthorized(req)) {
     return NextResponse.json({ error: "Acces refuse" }, { status: 401 });
@@ -183,20 +263,22 @@ async function handle(req: NextRequest) {
     );
   }
 
-  // Traiter les rappels d'événements ET les notifications programmées
-  const [remindersSummary, scheduledSummary] = await Promise.all([
+  // Traiter les 3 types de notifications
+  const [remindersSummary, scheduledSummary, eventSubsSummary] = await Promise.all([
     processDueReminders(),
     processScheduledPushes(),
+    processEventSubscriptions(),
   ]);
 
   return NextResponse.json({
     reminders: remindersSummary,
     scheduled: scheduledSummary,
+    eventSubscriptions: eventSubsSummary,
     total: {
-      processed: remindersSummary.processed + scheduledSummary.processed,
-      sent: remindersSummary.sent + scheduledSummary.sent,
-      failed: remindersSummary.failed + scheduledSummary.failed,
-      removed: remindersSummary.removed + scheduledSummary.removed,
+      processed: remindersSummary.processed + scheduledSummary.processed + eventSubsSummary.processed,
+      sent: remindersSummary.sent + scheduledSummary.sent + eventSubsSummary.sent,
+      failed: remindersSummary.failed + scheduledSummary.failed + eventSubsSummary.failed,
+      removed: remindersSummary.removed + scheduledSummary.removed + eventSubsSummary.removed,
     },
   });
 }
