@@ -282,8 +282,27 @@ model PushSubscription {
   user      User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
   reminders EventReminder[]
   topics    PushSubscriptionTopic[]
+  events    PushEventSubscription[] // Abonnements à des événements spécifiques
 
   @@index([userId])
+}
+
+// Abonnement aux notifications d'événements spécifiques ( utilise slug Strapi )
+model PushEventSubscription {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  pushSubscriptionId Int
+  pushSubscription   PushSubscription @relation(fields: [pushSubscriptionId], references: [id], onDelete: Cascade)
+
+  eventSlug String // Slug Strapi (ex: "frontex", "dj-solar")
+  eventTitle String? // Titre pour affichage
+  eventStartsAt DateTime? // Date pour filtrer
+
+  @@unique([pushSubscriptionId, eventSlug]) // Un seul abonnement par event
+  @@index([pushSubscriptionId])
+  @@index([eventSlug])
+  @@index([eventStartsAt])
 }
 
 model EventReminder {

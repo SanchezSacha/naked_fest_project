@@ -8,6 +8,7 @@ import {
   unsubscribeFromPush,
 } from "@/lib/push-client";
 import PushTopicSelector from "./PushTopicSelector";
+import PushEventSelector from "./PushEventSelector";
 
 type Status = "loading" | "unsupported" | "denied" | "off" | "on";
 
