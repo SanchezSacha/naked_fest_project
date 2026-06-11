@@ -124,17 +124,6 @@ export default function CartePage() {
           </div>
 
           {/* Marqueurs sur la carte */}
-          <div className="absolute left-1/2 top-[63%] -translate-x-1/2 -translate-y-1/2 lg:left-[54%] lg:top-[58%]">
-            <div className="relative flex flex-col items-center">
-              <span className="relative grid size-6 rotate-45 place-items-center bg-pink shadow-[0_0_22px_rgba(255,45,155,0.75)] lg:size-8">
-                <span className="size-2 bg-white/90" />
-              </span>
-              <span className="mt-6 bg-pink px-2.5 py-1 font-condensed text-[10px] font-bold uppercase leading-none tracking-[0.06em] text-white shadow-[0_6px_16px_rgba(0,0,0,0.45)] lg:text-xs">
-                Scène principale
-              </span>
-            </div>
-          </div>
-
           {/* Zone Cryo - haut gauche */}
           <div className="absolute left-[20%] top-[25%] -translate-x-1/2 -translate-y-1/2 lg:left-[22%] lg:top-[28%]">
             <div className="relative flex flex-col items-center">

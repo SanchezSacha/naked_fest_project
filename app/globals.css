@@ -33,6 +33,7 @@
   .bg-pink     { background-color: var(--neon-pink); }
   .bg-cyan     { background-color: var(--neon-cyan); }
   .bg-violet   { background-color: var(--neon-violet); }
+  .bg-orange   { background-color: var(--neon-orange); }
   .bg-dark     { background-color: var(--color-dark); }
 
   .border-lime   { border-color: var(--neon-lime); }
