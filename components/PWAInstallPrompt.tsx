@@ -51,12 +51,12 @@ export default function PWAInstallPrompt() {
     if (isStandalone()) return;
     if (localStorage.getItem(DISMISS_KEY) === "1") return;
 
-    const detected = detectPlatform();
-    setPlatform(detected);
-
-    // Récupère un éventuel prompt déjà capturé par le script du <head>
-    const stashed = (window as Window & { __pwaPrompt?: BeforeInstallPromptEvent | null }).__pwaPrompt;
-    if (stashed) setDeferredPrompt(stashed);
+    const setupTimer = window.setTimeout(() => {
+      setPlatform(detectPlatform());
+      const stashed = (window as Window & { __pwaPrompt?: BeforeInstallPromptEvent | null })
+        .__pwaPrompt;
+      if (stashed) setDeferredPrompt(stashed);
+    }, 0);
 
     const onBeforeInstall = (e: Event) => {
       e.preventDefault();
@@ -88,6 +88,7 @@ export default function PWAInstallPrompt() {
       window.removeEventListener("beforeinstallprompt", onBeforeInstall);
       window.removeEventListener("pwa-installable", onInstallable);
       window.removeEventListener("appinstalled", onInstalled);
+      window.clearTimeout(setupTimer);
       window.clearTimeout(timer);
     };
   }, []);
@@ -277,6 +278,8 @@ function IosTutorial() {
   );
 }
 
+// Kept for Safari-specific install guidance when the browser API becomes available.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function MacTutorial() {
   const steps = [
     {

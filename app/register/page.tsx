@@ -104,16 +104,17 @@ export default function Register() {
           id="name"
           name="name"
           label="Nom complet"
-          placeholder="Maya Laurent"
+          placeholder="John Doe"
           type="text"
           autoComplete="name"
           error={fieldErrors.name}
+          minLength={2}
         />
         <AuthFormField
           id="email"
           name="email"
           label="Email"
-          placeholder="maya@nfest.fr"
+          placeholder="john.doe@example.com"
           type="email"
           autoComplete="email"
           error={fieldErrors.email}
@@ -122,20 +123,22 @@ export default function Register() {
           id="password"
           name="password"
           label="Mot de passe"
-          placeholder="ex: Glacier2027!"
+          placeholder="8 caracteres minimum"
           type="password"
           autoComplete="new-password"
           error={fieldErrors.password}
-          hint="Min. 12 caracteres"
+          hint="Min. 8 caracteres"
+          minLength={8}
         />
         <AuthFormField
           id="passwordConfirmation"
           name="passwordConfirmation"
           label="Confirmer le mot de passe"
-          placeholder="retapez Glacier2027!"
+          placeholder="Confirmez votre mot de passe"
           type="password"
           autoComplete="new-password"
           error={fieldErrors.passwordConfirmation}
+          minLength={8}
         />
 
         <AuthSubmitButton>{isPending ? "Creation..." : "Creer mon compte"}</AuthSubmitButton>

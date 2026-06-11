@@ -11,6 +11,8 @@ type AuthFormFieldProps = {
   autoComplete: string;
   error?: string;
   hint?: string;
+  required?: boolean;
+  minLength?: number;
 };
 
 export default function AuthFormField({
@@ -22,6 +24,8 @@ export default function AuthFormField({
   autoComplete,
   error,
   hint,
+  required = true,
+  minLength,
 }: AuthFormFieldProps) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const isPasswordField = type === "password";
@@ -47,7 +51,9 @@ export default function AuthFormField({
           type={inputType}
           autoComplete={autoComplete}
           placeholder={placeholder}
-          className={`h-20 w-full border-4 border-[#343438] bg-black/45 px-6 font-condensed text-2xl uppercase tracking-[0.08em] text-white outline-none transition-all duration-200 placeholder:text-white/30 hover:border-lime/70 hover:bg-black/70 hover:placeholder:text-white/45 focus:border-lime focus:bg-black focus:shadow-[0_0_0_1px_var(--neon-lime)] md:h-24 ${
+          required={required}
+          minLength={minLength}
+          className={`h-20 w-full border-4 border-[#343438] bg-black/45 px-6 font-condensed text-2xl tracking-[0.04em] text-white outline-none transition-all duration-200 placeholder:text-white/30 hover:border-lime/70 hover:bg-black/70 hover:placeholder:text-white/45 focus:border-lime focus:bg-black focus:shadow-[0_0_0_1px_var(--neon-lime)] md:h-24 ${
             isPasswordField ? "pr-20" : ""
           } ${error ? "border-pink focus:border-pink focus:shadow-[0_0_0_1px_#ff2d9b]" : ""}`}
         />

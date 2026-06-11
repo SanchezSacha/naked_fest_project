@@ -28,7 +28,9 @@ export default function Login() {
       return;
     }
 
-    window.location.href = "/programme";
+    const redirectTo = sessionStorage.getItem("nfest-post-login-redirect") || "/programme";
+    sessionStorage.removeItem("nfest-post-login-redirect");
+    window.location.href = redirectTo;
   }
 
   return (
@@ -38,7 +40,7 @@ export default function Login() {
           id="email"
           name="email"
           label="Email"
-          placeholder="maya@nfest.fr"
+          placeholder="john.doe@example.com"
           type="email"
           autoComplete="email"
         />
@@ -46,9 +48,10 @@ export default function Login() {
           id="password"
           name="password"
           label="Mot de passe"
-          placeholder="votre mot de passe"
+          placeholder="Votre mot de passe"
           type="password"
           autoComplete="current-password"
+          minLength={8}
         />
 
         <div className="text-right">
