@@ -2,7 +2,7 @@
 // Stratégie : network-first avec repli cache hors-ligne pour les pages.
 
 const CACHE = "nfest-v1";
-const OFFLINE_URLS = ["/", "/manifest.json"];
+const OFFLINE_URLS = ["/", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
