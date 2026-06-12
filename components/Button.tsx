@@ -30,7 +30,7 @@ const sizeClasses: Record<ButtonSize, string> = {
 };
 
 const baseClasses =
-  "inline-flex items-center justify-center gap-2 rounded-lg font-condensed font-bold uppercase transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
+  "inline-flex items-center justify-center gap-2 rounded-none font-condensed font-bold uppercase transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
 
 /* ── Mappings statiques pour Tailwind v4 ── */
 const solidMap: Record<ButtonColor, string> = {
@@ -82,10 +82,10 @@ const subtleMap: Record<ButtonColor, string> = {
 };
 
 const filledMap: Record<ButtonColor, string> = {
-  lime:   "bg-lime text-dark border border-lime hover:bg-dark hover:text-white hover:shadow-[0_0_18px_rgba(200,255,0,0.25)]",
-  pink:   "bg-pink text-dark border border-pink hover:bg-dark hover:text-white hover:shadow-[0_0_18px_rgba(255,45,155,0.25)]",
-  cyan:   "bg-cyan text-dark border border-cyan hover:bg-dark hover:text-white hover:shadow-[0_0_18px_rgba(0,245,255,0.25)]",
-  violet: "bg-violet text-dark border border-violet hover:bg-dark hover:text-white hover:shadow-[0_0_18px_rgba(191,95,255,0.25)]",
+  lime:   "bg-lime text-dark border border-lime hover:bg-dark hover:text-lime hover:shadow-[0_0_18px_rgba(200,255,0,0.25)]",
+  pink:   "bg-pink text-dark border border-pink hover:bg-dark hover:text-pink hover:shadow-[0_0_18px_rgba(255,45,155,0.25)]",
+  cyan:   "bg-cyan text-dark border border-cyan hover:bg-dark hover:text-cyan hover:shadow-[0_0_18px_rgba(0,245,255,0.25)]",
+  violet: "bg-violet text-dark border border-violet hover:bg-dark hover:text-violet hover:shadow-[0_0_18px_rgba(191,95,255,0.25)]",
   white:  "bg-white text-dark border border-white hover:bg-dark hover:text-white hover:shadow-[0_0_18px_rgba(255,255,255,0.12)]",
 };
 

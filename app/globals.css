@@ -42,6 +42,12 @@
   .border-violet { border-color: var(--neon-violet); }
   .border-dark-border { border-color: var(--color-dark-border); }
 
+  .hover\:text-lime:hover   { color: var(--neon-lime); }
+  .hover\:text-pink:hover   { color: var(--neon-pink); }
+  .hover\:text-cyan:hover   { color: var(--neon-cyan); }
+  .hover\:text-violet:hover { color: var(--neon-violet); }
+  .hover\:bg-dark:hover     { background-color: var(--color-dark); }
+
   .divide-lime > * + *   { border-color: var(--neon-lime); }
   .divide-pink > * + *   { border-color: var(--neon-pink); }
 }

@@ -221,9 +221,10 @@ export default async function HomePage() {
             </div>
             <Link
               href="/programme"
-              className="font-condensed text-xs uppercase tracking-[0.2em] text-lime transition-colors hover:text-lime/80"
+              className="group font-condensed text-xs uppercase tracking-[0.2em] text-lime transition-colors hover:text-white"
             >
-              Voir tout le programme →
+              Voir tout le programme{" "}
+              <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
             </Link>
           </div>
         </div>
@@ -290,7 +291,7 @@ export default async function HomePage() {
                 as="link"
                 href="/carte"
                 color="lime"
-                variant="outline-inverse"
+                variant="filled"
                 size="md"
                 className="gap-3"
               >
